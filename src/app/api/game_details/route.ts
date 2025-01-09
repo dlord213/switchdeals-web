@@ -1,6 +1,5 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
-import puppeteer, { Browser } from "puppeteer";
 import NodeCache from "node-cache";
 import { NextRequest, NextResponse } from "next/server";
 import { Game } from "@/types/Game";
@@ -10,7 +9,6 @@ const cache = new NodeCache({ stdTTL: 600 });
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const url = searchParams.get("url");
-  const game = url?.split("/").pop();
 
   if (!url || !url.startsWith("/")) {
     return NextResponse.json({ error: "Invalid URL" }, { status: 400 });
@@ -61,64 +59,16 @@ export async function GET(request: NextRequest) {
       coverImage: $("img.game-cover-image")
         ?.attr("data-src")
         ?.replace("w_150", "w_1024"),
-      eShopLink: $(".game-buy-button-href")?.attr("href"),
+      eShopLink: $(".game-buy-button-href")?.attr("href")?.replace("en-ca", ""),
     });
 
     cache.set(url, games);
     return games;
   };
 
-  const getGameMetacriticReviews = async (browser: Browser) => {
-    const page = await browser.newPage();
-    try {
-      await page.goto(
-        `https://www.metacritic.com/game/${game}/critic-reviews/`,
-        { waitUntil: "domcontentloaded" }
-      );
-      await page.setViewport({ width: 1080, height: 1024 });
-      await page.waitForSelector('[data-testid="product-reviews"]');
-      return await page.$$eval(
-        '[data-testid="product-review"]',
-        (reviewElements) =>
-          reviewElements.map((review) => ({
-            score: review
-              .querySelector(".c-siteReviewHeader_reviewScore span")
-              ?.textContent.trim(),
-            reviewer: review
-              .querySelector(".c-siteReviewHeader_publicationName")
-              ?.textContent.trim(),
-            date: review
-              .querySelector(".c-siteReviewHeader_reviewDate")
-              ?.textContent.trim(),
-            quote: review
-              .querySelector(".c-siteReview_quote span")
-              ?.textContent.trim(),
-            platform: review
-              .querySelector(".c-siteReview_platform")
-              ?.textContent.trim(),
-            fullReviewLink: review.querySelector(".c-siteReview_externalLink")
-              ?.href,
-          }))
-      );
-    } finally {
-      await page.close();
-    }
-  };
-
   try {
-    const browser = await puppeteer.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
-    const [games, reviews] = await Promise.all([
-      getGameData(),
-      getGameMetacriticReviews(browser),
-    ]);
-    await browser.close();
-    return NextResponse.json(
-      { gameDetails: games, gameMetacriticReviews: reviews },
-      { status: 200 }
-    );
+    const games = await getGameData();
+    return NextResponse.json({ gameDetails: games }, { status: 200 });
   } catch (error: unknown) {
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error";

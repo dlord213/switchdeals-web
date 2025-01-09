@@ -4,7 +4,7 @@ import "./globals.css";
 import { ReactQueryProvider } from "@/lib/query_provider";
 
 const workSans = Work_Sans({
-  variable: "--font-geist-sans",
+  variable: "--font-work-sans",
   subsets: ["latin"],
 });
 
