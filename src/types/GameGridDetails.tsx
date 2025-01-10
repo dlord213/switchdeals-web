@@ -4,5 +4,5 @@ export default interface GameGridDetails {
   discount: string;
   price: string;
   originalPrice: string;
-  link: string | undefined | null;
+  link: string;
 }
