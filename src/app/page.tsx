@@ -39,11 +39,7 @@ export default function Home() {
     refetchOnWindowFocus: false,
   });
 
-  const {
-    data: featuredGamesData,
-    isLoading: isFeaturedLoading,
-    isError: isFeaturedError,
-  } = useQuery({
+  const { data: featuredGamesData } = useQuery({
     queryKey: ["featuredGames"],
     queryFn: async () => {
       const response = await fetch("api/featured_games/");
