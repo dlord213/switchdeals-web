@@ -12,6 +12,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import { FourSquare } from "react-loading-indicators";
 import getGameDetails from "@/lib/get_game_details";
+import Link from "next/link";
 
 export default function GameDetails({ params }: any) {
   const { value } = params;
@@ -123,7 +124,11 @@ export default function GameDetails({ params }: any) {
               </div>
               <div className="grid xl:grid-cols-5 gap-2">
                 {recommendations.map((game: any) => (
-                  <div className="flex flex-col gap-2" key={game.href}>
+                  <Link
+                    href={`/game/${encodeURIComponent(game.href)}`}
+                    className="flex flex-col gap-2"
+                    key={game.href}
+                  >
                     <img
                       src={game.imageUrl}
                       alt={game.title}
@@ -133,7 +138,7 @@ export default function GameDetails({ params }: any) {
                       <h1 className="font-bold">{game.title}</h1>
                       <p className="">{game.discountedPrice}</p>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
               {/* {!gameReviewsIsLoading &&

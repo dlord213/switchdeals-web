@@ -9,7 +9,6 @@ export async function generateMetadata({
 }) {
   const game = (await params).game;
   const decodedUrl = decodeURIComponent(game);
-  console.log(decodedUrl);
 
   const host = (await headers()).get("host");
   const protocol = host?.includes("localhost") ? "http" : "https";
@@ -17,11 +16,11 @@ export async function generateMetadata({
 
   const response = await fetch(`${baseUrl}/api/game_details?url=${decodedUrl}`);
   const gameDetails = await response.json();
+  console.log(gameDetails);
 
   return {
-    title:
-      "SwitchDeals - " + gameDetails?.gameDetails?.[0]?.title || "Game Details",
-    description: gameDetails?.gameDetails?.[0]?.description || "",
+    title: "SwitchDeals - " + gameDetails.gameDetails?.title || "Game Details",
+    description: gameDetails.gameDetails?.description || "",
   };
 }
 

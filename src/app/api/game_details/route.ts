@@ -132,7 +132,7 @@ export async function GET(request: NextRequest) {
     gameDetails["description"] = $(".description").text().trim();
     gameDetails["images"] = imageSources;
     gameDetails["recommendations"] = recommendations;
-    gameDetails["title"] = $(".clearfix.mb-2 > h2").text().trim;
+    gameDetails["title"] = $(".clearfix.mb-2 > h2").text().trim();
     /* RIGHT SIDE ====================================================================== */
 
     return gameDetails;

@@ -13,6 +13,5 @@ export default async function getGameDetails(query: string) {
   }
 
   const data = await response.json();
-  console.log(data);
   return data;
 }

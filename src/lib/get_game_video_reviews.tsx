@@ -15,7 +15,6 @@ export default async function getGameVideoReviews(query: string) {
     }
 
     const data = await response.json();
-    console.log(data);
     return data;
   } catch (err) {
     return err;
