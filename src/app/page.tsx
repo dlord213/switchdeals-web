@@ -30,7 +30,7 @@ export default function Home() {
   } = useQuery({
     queryKey: ["gamesData", link],
     queryFn: async () => {
-      const response = await fetch(`api/games?url=${link}`);
+      const response = await fetch(`api/games/`);
       if (!response.ok) throw new Error("Failed to fetch games data");
       return response.json();
     },
@@ -46,9 +46,7 @@ export default function Home() {
   } = useQuery({
     queryKey: ["featuredGames"],
     queryFn: async () => {
-      const response = await fetch(
-        "api/games?url=https://ntdeals.net/us-store/discounts?sort=best-new-deals"
-      );
+      const response = await fetch("api/featured_games/");
       if (!response.ok) throw new Error("Failed to fetch featured games");
       return response.json();
     },

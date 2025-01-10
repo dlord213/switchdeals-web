@@ -5,7 +5,7 @@ import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   try {
-    const { data } = await axios.get("https://www.dekudeals.com/hottest");
+    const { data } = await axios.get("https://www.dekudeals.com/recent-drops");
 
     if (!data) return NextResponse.json({ games: [] }, { status: 500 });
 

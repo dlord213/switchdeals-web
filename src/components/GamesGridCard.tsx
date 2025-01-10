@@ -1,17 +1,16 @@
 import Link from "next/link";
 
 interface GameDetails {
-  title: string;
-  link: string;
+  productTitle: string;
+  imgSrc: string | undefined;
   discount: string;
-  imageSrc: string;
   price: string;
   originalPrice: string;
-  type?: string; // Optional, as not all games might have a type
+  link: string | undefined;
 }
 
 export default function GamesGridCard({ data }: { data: GameDetails }) {
-  if (!data?.title || !data?.link || !data?.imageSrc || !data?.price) {
+  if (!data?.productTitle || !data?.link || !data?.imgSrc || !data?.price) {
     return null;
   }
 
@@ -19,7 +18,7 @@ export default function GamesGridCard({ data }: { data: GameDetails }) {
     <Link
       href={`/game/${encodeURIComponent(data.link)}`}
       className="flex flex-col border rounded-md transition-transform duration-200 hover:scale-105 hover:shadow-xl"
-      key={data.title}
+      key={data.productTitle}
     >
       <div className="relative w-full h-[180px]">
         {data.discount && (
@@ -27,20 +26,15 @@ export default function GamesGridCard({ data }: { data: GameDetails }) {
             {data.discount}
           </p>
         )}
-        {data.type === "Bundle" && (
-          <p className="absolute top-2 right-2 z-10 text-sm bg-green-500 text-white rounded-md px-2 py-1 shadow-lg">
-            Bundle
-          </p>
-        )}
         <img
-          src={data.imageSrc}
-          alt={data.title}
+          src={data.imgSrc}
+          alt={data.productTitle}
           className="w-full h-full object-cover rounded-t-md"
           loading="lazy"
         />
       </div>
       <div className="flex flex-col gap-2 p-4">
-        <h1 className="text-lg font-bold text-gray-800">{data.title}</h1>
+        <h1 className="text-lg font-bold text-gray-800">{data.productTitle}</h1>
         <div className="flex flex-row items-center gap-2">
           <p className="text-lg font-bold text-black">{data.price}</p>
           {data.originalPrice && (
