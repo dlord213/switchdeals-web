@@ -5,54 +5,53 @@ import * as cheerio from "cheerio";
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get("query");
-  const region = searchParams.get("region");
 
-  if (!query || !region) {
-    return NextResponse.json(
-      { error: "Missing query or region parameter" },
-      { status: 400 }
-    );
+  if (!query) {
+    return NextResponse.json({ error: "Missing query" }, { status: 400 });
   }
 
   try {
-    const url = `https://ntdeals.net/${region}-store/search?search_query=${query}`;
-    const response = await axios.get(url);
-    const html = response.data;
+    const url = `https://www.dekudeals.com/search?q=${query}`;
+    const { data } = await axios.get(url);
 
-    if (!html) {
-      return NextResponse.json({ games: [] }, { status: 500 });
-    }
+    if (!data) return NextResponse.json({ games: [] }, { status: 500 });
 
-    const $ = cheerio.load(html);
-    const games = $(".game-collection-item-link")
-      .map((_, element) => {
-        const $element = $(element);
+    const $ = cheerio.load(data);
 
-        return {
-          title: $element
-            .find(".game-collection-item-details-title")
-            .text()
-            .trim(),
-          discount: $element
-            .find(".game-collection-item-discount")
-            .text()
-            .trim(),
-          price: $element
-            .find(".game-collection-item-price-discount")
-            .text()
-            .trim(),
-          originalPrice: $element
-            .find(".game-collection-item-price")
-            .text()
-            .trim(),
-          imageSrc: $element
-            .find("img.game-collection-item-image")
-            .attr("data-src")
-            ?.replace("w_192", "w_1024"),
-          link: $element.attr("href"),
-        };
-      })
-      .get();
+    const games: {
+      productTitle: string;
+      imgSrc: string | undefined;
+      discount: string;
+      price: string;
+      originalPrice: string;
+      link: string | undefined;
+    }[] = [];
+
+    $(".browse-cards.desktop > .row > .col").each((index, element) => {
+      const $element = $(element);
+
+      const productTitle = $element.find(".main-link h6").text().trim();
+      const imgSrc = $element.find(".img-frame img").attr("src");
+      const price = $element
+        .find(".d-flex.align-items-center.text-tight strong")
+        .text()
+        .trim();
+      const originalPrice = $element
+        .find(".d-flex.align-items-center.text-tight s")
+        .text()
+        .trim();
+      const discount = $element.find(".badge-danger").text().trim();
+      const link = $element.find(".main-link").attr("href");
+
+      games.push({
+        productTitle,
+        imgSrc,
+        discount,
+        price,
+        originalPrice,
+        link,
+      });
+    });
 
     return NextResponse.json({ games }, { status: 200 });
   } catch (error: unknown) {

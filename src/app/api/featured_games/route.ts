@@ -5,7 +5,9 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const { data } = await axios.get("https://www.dekudeals.com/recent-drops");
+    const { data } = await axios.get(
+      "https://www.dekudeals.com/recent-drops?filter[store]=eshop"
+    );
 
     if (!data) return NextResponse.json({ games: [] }, { status: 500 });
 

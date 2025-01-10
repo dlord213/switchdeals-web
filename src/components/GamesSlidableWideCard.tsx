@@ -5,11 +5,12 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
+import GameGridDetails from "@/types/GameGridDetails";
 
 export default function GamesSlidableWideCard({
   data,
 }: {
-  data: [{ link: string; imageSrc: string; title: string; price: string }];
+  data: GameGridDetails[];
 }) {
   if (data) {
     return (
@@ -27,12 +28,12 @@ export default function GamesSlidableWideCard({
               href={`/game/${encodeURIComponent(game.link)}`}
             >
               <img
-                src={game.imageSrc}
-                alt={game.title}
+                src={game.imgSrc}
+                alt={game.productTitle}
                 className="absolute top-0 left-0 w-full max-h-[360px] object-cover brightness-75 rounded-md"
               />
               <h2 className="z-10 font-black text-3xl text-white carousel-text-shadow">
-                {game.title}
+                {game.productTitle}
               </h2>
               <p className="z-10 text-3xl text-white carousel-text-shadow">
                 {game.price}

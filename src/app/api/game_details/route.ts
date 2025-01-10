@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 import * as cheerio from "cheerio";
 import NodeCache from "node-cache";
 import { NextRequest, NextResponse } from "next/server";
-import { Game } from "@/types/Game";
 
 const cache = new NodeCache({ stdTTL: 600 });
 
@@ -18,58 +18,129 @@ export async function GET(request: NextRequest) {
     const cachedData = cache.get(url);
     if (cachedData) return cachedData;
 
-    const response = await axios.get(`https://ntdeals.net${url}`);
-    const html = response.data;
-    if (!html) throw new Error("Failed to fetch game data");
+    const { data } = await axios.get(`https://www.dekudeals.com${url}`);
+    if (!data) throw new Error("Failed to fetch game data");
 
-    const $ = cheerio.load(html);
-    const games: Game[] = [];
-    const details: Record<string, string> = {};
-    const images: string[] = [];
+    const $ = cheerio.load(data);
 
-    const title = $(".game-title-info-name")?.text()?.trim() || "Unknown title";
-    const description = $('[itemprop="description"]')?.text()?.trim() || "";
+    const imageSources: string[] = [];
+    const recommendations: {
+      title: string;
+      imageUrl: string | undefined;
+      originalPrice: string | null;
+      discountedPrice: string | null;
+      price: string;
+      href: string | undefined;
+    }[] = [];
+    const gameDetails: any = {};
 
-    $(".game-info p").each((_, element) => {
-      const label = $(element).find("strong").text().replace(":", "").trim();
-      const detail = $(element).find(".game-info-detail").text().trim();
-      if (label && detail) details[label] = detail;
-    });
+    /* LEFT SIDE ====================================================================== */
+    gameDetails.image = $(".responsive-img").attr("src");
+    $(".details .list-group-item").each((index, element) => {
+      const key = $(element).find("strong").text().replace(":", "").trim();
+      let value: any;
 
-    $("#carousel-screenshot-single .game-page-carousel-item").each(
-      (_, element) => {
-        const imageUrl =
-          $(element).find("img").attr("data-src") ||
-          $(element).find("img").attr("src");
-        if (imageUrl) images.push(imageUrl);
+      // Handle nested lists
+      if ($(element).find("ul").length > 0) {
+        value = {};
+        $(element)
+          .find("ul li")
+          .each((i, li) => {
+            const subKey = $(li).find("strong").text().replace(":", "").trim();
+            value[subKey] = $(li).text().replace(`${subKey}:`, "").trim();
+          });
+      } else if ($(element).find("a").length > 0) {
+        // Handle links (extract the text or URL)
+        value = $(element)
+          .find("a")
+          .map((i, el) => {
+            return {
+              genreName: $(el).text().trim(),
+              genreLink: $(el).attr("href"),
+            };
+          })
+          .get();
+      } else {
+        // Handle plain text values
+        value = $(element)
+          .text()
+          .replace($(element).find("strong").text(), "")
+          .trim();
+
+        // Split concatenated values for release date if present
+        if (key === "Release date") {
+          value = value.split(",").map((date: string) => date.trim());
+        }
+
+        // Handle "How Long To Beat"
+        if (key === "How Long To Beat") {
+          const times = $(element)
+            .text()
+            .match(/Main Story:(.*?)Main \+ Extra:(.*?)Completionist:(.*)/);
+          if (times) {
+            value = {
+              "Main Story": times[1].trim(),
+              "Main + Extra": times[2].trim(),
+              Completionist: times[3].trim(),
+            };
+          }
+        }
       }
-    );
 
-    games.push({
-      title,
-      description,
-      details,
-      images,
-      discount: $(".game-cover-save-regular")?.text()?.trim() || "",
-      discountEndDate:
-        $(".game-cover-bottom-small")?.text()?.replace("Ends: ", "").trim() ||
-        "",
-      price: $(".game-buy-button-price-discount")?.text()?.trim() || "",
-      originalPrice: $(".game-buy-button-price")?.text()?.trim() || "",
-      coverImage: $("img.game-cover-image")
-        ?.attr("data-src")
-        ?.replace("w_150", "w_1024"),
-      eShopLink: $(".game-buy-button-href")?.attr("href")?.replace("en-ca", ""),
-      type: $(".game-title-info-type").text().trim(),
+      gameDetails[key] = value;
+    });
+    /* LEFT SIDE ====================================================================== */
+
+    /* RIGHT SIDE ====================================================================== */
+    $("#screenshotPreviews img").each((index, element) => {
+      const imgSrc: any = $(element).attr("data-src");
+      imageSources.push(imgSrc);
     });
 
-    cache.set(url, games);
-    return games;
+    $(".row.item-grid2 .cell").each((index, element) => {
+      const title = $(element).find(".name").text().trim();
+      const imageUrl = $(element).find("img").attr("src");
+      const href = $(element).find("a.main-link").attr("href");
+
+      let price = $(element).find(".price").text().trim();
+      let originalPrice = null;
+      let discountedPrice = null;
+
+      if ($(element).find(".card-badge").length > 0) {
+        originalPrice = $(element).find(".text-muted").text().trim();
+        discountedPrice = $(element).find("strong").text().trim();
+        price = discountedPrice;
+      }
+
+      recommendations.push({
+        title,
+        imageUrl,
+        originalPrice,
+        discountedPrice,
+        price,
+        href: href,
+      });
+    });
+
+    const table = $(".col-lg-6 > table").eq(0);
+    gameDetails["eshopLink"] = table.find("a").attr("href");
+    gameDetails["discountedPrice"] = table
+      .find(".btn.btn-block.btn-primary")
+      .text()
+      .trim()
+      .split("\n")[0];
+    gameDetails["description"] = $(".description").text().trim();
+    gameDetails["images"] = imageSources;
+    gameDetails["recommendations"] = recommendations;
+    gameDetails["title"] = $(".clearfix.mb-2 > h2").text().trim;
+    /* RIGHT SIDE ====================================================================== */
+
+    return gameDetails;
   };
 
   try {
-    const games = await getGameData();
-    return NextResponse.json({ gameDetails: games }, { status: 200 });
+    const details = await getGameData();
+    return NextResponse.json({ gameDetails: details }, { status: 200 });
   } catch (error: unknown) {
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error";

@@ -1,15 +1,7 @@
+import GameGridDetails from "@/types/GameGridDetails";
 import Link from "next/link";
 
-interface GameDetails {
-  productTitle: string;
-  imgSrc: string | undefined;
-  discount: string;
-  price: string;
-  originalPrice: string;
-  link: string | undefined;
-}
-
-export default function GamesGridCard({ data }: { data: GameDetails }) {
+export default function GamesGridCard({ data }: { data: GameGridDetails }) {
   if (!data?.productTitle || !data?.link || !data?.imgSrc || !data?.price) {
     return null;
   }
