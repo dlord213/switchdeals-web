@@ -16,14 +16,9 @@ import Link from "next/link";
 import getGameDetails from "@/lib/get_game_details";
 import getGameReviews from "@/lib/get_game_reviews";
 import getGameVideoReviews from "@/lib/get_game_video_reviews";
-import { use } from "react";
 
-export default function GameDetails({
-  params,
-}: {
-  params: Promise<{ value: string }>;
-}) {
-  const { value } = use(params);
+export default function GameDetails({ params }: { params: { value: string } }) {
+  const { value } = params;
 
   const {
     data: gameDetailsData,
@@ -201,7 +196,6 @@ export default function GameDetails({
                             src={review.imgSrc}
                             className="w-full object-cover rounded-lg"
                             alt={`Screenshot ${index + 1}`}
-                            key={review.imgSrc}
                           />
                           <p className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4 text-center">
                             {review.imgAlt}

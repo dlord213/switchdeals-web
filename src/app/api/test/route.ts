@@ -8,10 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   try {
-    const { data } = await axios.get(
-      "https://api.allorigins.win/get?url=" +
-        encodeURIComponent("https://www.gsmarena.com/")
-    );
+    const { data } = await axios.get("https://www.gsmarena.com/");
 
     if (!data.contents) {
       return NextResponse.json(

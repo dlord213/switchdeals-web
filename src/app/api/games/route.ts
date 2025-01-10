@@ -1,5 +1,3 @@
-export const dynamic = "force-dynamic";
-export const runtime = "nodejs";
 import axios from "axios";
 import * as cheerio from "cheerio";
 
@@ -14,9 +12,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const response = await axios.get(
-      "https://api.allorigins.win/get?url=" + url
-    );
+    const response = await axios.get(url);
     const html = response.data;
 
     if (!html) return NextResponse.json({ games: [] }, { status: 500 });
