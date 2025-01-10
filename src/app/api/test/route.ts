@@ -8,46 +8,65 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   try {
-    const { data } = await axios.get("https://www.gsmarena.com/");
+    const { data } = await axios.get(
+      "https://ntdeals.net/us-store/discounts?sort=best-new-deals"
+    );
 
     const $ = cheerio.load(data);
 
-    // Extract latest phones
-    const latestPhones: {
-      model: string;
-      image: string | undefined;
-      link: string | undefined;
+    const games: {
+      title: string;
+      discount: string;
+      price: string;
+      originalPrice: string;
+      imageSrc?: string;
+      link: string | null;
+      type: string;
     }[] = [];
-    $(
-      '.module-latest:has(h4.section-heading:contains("Latest devices")) .module-phones-link'
-    ).each((_, el) => {
-      const model = $(el).text().trim();
-      const image = $(el).find("img").attr("src");
-      const link = $(el).attr("href")?.replace(".php", "");
-      latestPhones.push({ model, image, link });
+
+    $(".game-collection-item-link").each((index, element) => {
+      const $element = $(element);
+
+      const title = $element
+        .find(".game-collection-item-details-title")
+        .text()
+        .trim();
+
+      const discount = $element
+        .find(".game-collection-item-discount")
+        .text()
+        .trim();
+
+      const price = $element
+        .find(".game-collection-item-price-discount")
+        .text()
+        .trim();
+
+      const originalPrice = $element
+        .find(".game-collection-item-price")
+        .text()
+        .trim();
+
+      const imageSrc = $element
+        .find("img.game-collection-item-image")
+        .attr("data-src")
+        ?.replace("w_192", "w_1024");
+
+      const link = $element.attr("href") || null;
+      const type = $element.find(".game-collection-item-type").text().trim();
+
+      games.push({
+        title,
+        discount,
+        price,
+        originalPrice,
+        imageSrc,
+        link,
+        type,
+      });
     });
 
-    // Extract phones in stores now
-    const phonesInStore: {
-      model: string;
-      image: string | undefined;
-      link: string | undefined;
-    }[] = [];
-    $(
-      '.module-latest:has(h4.section-heading:contains("In stores now")) .module-phones-link'
-    ).each((_, el) => {
-      const model = $(el).text().trim();
-      const image = $(el).find("img").attr("src");
-      const link = $(el).attr("href")?.replace(".php", "");
-      phonesInStore.push({ model, image, link });
-    });
-
-    const result = {
-      latestPhones,
-      phonesInStore,
-    };
-
-    return NextResponse.json(result, { status: 200 });
+    return NextResponse.json({ games }, { status: 200 });
   } catch (error) {
     console.error("Error fetching latest phones data:", error);
     const errorMessage =
