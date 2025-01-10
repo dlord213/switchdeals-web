@@ -16,9 +16,14 @@ import Link from "next/link";
 import getGameDetails from "@/lib/get_game_details";
 import getGameReviews from "@/lib/get_game_reviews";
 import getGameVideoReviews from "@/lib/get_game_video_reviews";
+import { use } from "react";
 
-export default function GameDetails({ params }: { params: { value: string } }) {
-  const { value } = params;
+export default function GameDetails({
+  params,
+}: {
+  params: Promise<{ value: string }>;
+}) {
+  const { value } = use(params);
 
   const {
     data: gameDetailsData,
