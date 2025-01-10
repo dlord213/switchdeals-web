@@ -21,27 +21,37 @@ export async function GET(request: NextRequest) {
       await page.waitForSelector('[data-testid="product-reviews"]', {
         timeout: 60000,
       });
+
       return await page.$$eval(
         '[data-testid="product-review"]',
         (reviewElements) =>
           reviewElements.map((review) => ({
-            score: review
-              .querySelector(".c-siteReviewHeader_reviewScore span")
-              ?.textContent.trim(),
-            reviewer: review
-              .querySelector(".c-siteReviewHeader_publicationName")
-              ?.textContent.trim(),
-            date: review
-              .querySelector(".c-siteReviewHeader_reviewDate")
-              ?.textContent.trim(),
-            quote: review
-              .querySelector(".c-siteReview_quote span")
-              ?.textContent.trim(),
-            platform: review
-              .querySelector(".c-siteReview_platform")
-              ?.textContent.trim(),
-            fullReviewLink: review.querySelector(".c-siteReview_externalLink")
-              ?.href,
+            score:
+              review
+                .querySelector(".c-siteReviewHeader_reviewScore span")
+                ?.textContent?.trim() || null,
+            reviewer:
+              review
+                .querySelector(".c-siteReviewHeader_publicationName")
+                ?.textContent?.trim() || null,
+            date:
+              review
+                .querySelector(".c-siteReviewHeader_reviewDate")
+                ?.textContent?.trim() || null,
+            quote:
+              review
+                .querySelector(".c-siteReview_quote span")
+                ?.textContent?.trim() || null,
+            platform:
+              review
+                .querySelector(".c-siteReview_platform")
+                ?.textContent?.trim() || null,
+            fullReviewLink:
+              (
+                review.querySelector(
+                  ".c-siteReview_externalLink"
+                ) as HTMLAnchorElement
+              )?.href || null,
           }))
       );
     } finally {

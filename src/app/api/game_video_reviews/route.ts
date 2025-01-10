@@ -24,13 +24,17 @@ export async function GET(request: NextRequest) {
         );
 
         return Array.from(items).map((item) => {
-          const href = item.href;
-          const imgElement = item.querySelector("img");
+          const anchorElement = item as HTMLAnchorElement;
+          const href = anchorElement?.href || null;
+
+          const imgElement = item.querySelector(
+            "img"
+          ) as HTMLImageElement | null;
           const imgSrc = imgElement
             ? imgElement.getAttribute("src") ||
               imgElement.getAttribute("data-src")
             : null;
-          const imgAlt = imgElement ? imgElement.alt : null;
+          const imgAlt = imgElement?.alt || null;
 
           return { href, imgSrc, imgAlt };
         });

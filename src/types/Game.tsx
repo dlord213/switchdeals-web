@@ -9,4 +9,5 @@ export type Game = {
   originalPrice: string;
   coverImage?: string;
   eShopLink?: string;
+  type: string;
 };

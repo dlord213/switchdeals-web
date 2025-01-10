@@ -60,6 +60,7 @@ export async function GET(request: NextRequest) {
         ?.attr("data-src")
         ?.replace("w_150", "w_1024"),
       eShopLink: $(".game-buy-button-href")?.attr("href")?.replace("en-ca", ""),
+      type: $(".game-title-info-type").text().trim(),
     });
 
     cache.set(url, games);

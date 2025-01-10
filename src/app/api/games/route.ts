@@ -24,7 +24,8 @@ export async function GET(request: NextRequest) {
       price: string;
       originalPrice: string;
       imageSrc?: string;
-      link: string;
+      link: string | null;
+      type: string;
     }[] = [];
 
     $(".game-collection-item-link").each((index, element) => {
@@ -55,7 +56,8 @@ export async function GET(request: NextRequest) {
         .attr("data-src")
         ?.replace("w_192", "w_1024");
 
-      const link = $element.attr("href");
+      const link = $element.attr("href") || null;
+      const type = $element.find(".game-collection-item-type").text().trim();
 
       games.push({
         title,
@@ -64,6 +66,7 @@ export async function GET(request: NextRequest) {
         originalPrice,
         imageSrc,
         link,
+        type,
       });
     });
 

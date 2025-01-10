@@ -13,8 +13,11 @@ import { FaAddressBook, FaAddressCard, FaCalendar } from "react-icons/fa6";
 import { Navigation, Pagination } from "swiper/modules";
 import { FourSquare } from "react-loading-indicators";
 import Link from "next/link";
+import getGameDetails from "@/lib/get_game_details";
+import getGameReviews from "@/lib/get_game_reviews";
+import getGameVideoReviews from "@/lib/get_game_video_reviews";
 
-export default function GameDetails({ params }) {
+export default function GameDetails({ params }: { params: { value: string } }) {
   const { value } = params;
 
   const {
@@ -24,23 +27,7 @@ export default function GameDetails({ params }) {
     error,
   } = useQuery({
     queryKey: ["game", value],
-    queryFn: async () => {
-      if (!value) throw new Error("Query parameter is missing.");
-
-      const parsedJson = JSON.parse(value);
-      const decodedUrl = decodeURIComponent(parsedJson.game);
-
-      const response = await fetch(`/api/game_details?url=${decodedUrl}`);
-
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch game data: ${response.status} ${response.statusText}`
-        );
-      }
-
-      const data = await response.json();
-      return data;
-    },
+    queryFn: () => getGameDetails(value),
     enabled: Boolean(value),
     refetchOnWindowFocus: false,
     staleTime: 15 * 60 * 1000,
@@ -50,29 +37,13 @@ export default function GameDetails({ params }) {
 
   const { data: gameReviewsData, isLoading: gameReviewsIsLoading } = useQuery({
     queryKey: ["reviews", value],
-    queryFn: async () => {
-      try {
-        if (!value) throw new Error("Query parameter is missing.");
-
-        const parsedJson = JSON.parse(value);
-        const decodedUrl = decodeURIComponent(parsedJson.game);
-
-        console.log(decodedUrl);
-        const response = await fetch(`/api/game_reviews?url=${decodedUrl}`);
-
-        if (!response.ok) {
-          throw new Error(
-            `Failed to fetch game data: ${response.status} ${response.statusText}`
-          );
-        }
-
-        const data = await response.json();
-        return data;
-      } catch (err) {
-        return err;
-      }
+    queryFn: () => {
+      const gameDetails = gameDetailsData?.gameDetails?.[0];
+      return gameDetails?.type !== "Bundle"
+        ? getGameReviews(value)
+        : { gameMetacriticReviews: [] };
     },
-    enabled: Boolean(value),
+    enabled: Boolean(value && gameDetailsData),
     refetchOnWindowFocus: false,
     staleTime: 15 * 60 * 1000,
   });
@@ -80,31 +51,7 @@ export default function GameDetails({ params }) {
   const { data: gameVideoReviewsData, isLoading: gameVideoReviewsIsLoading } =
     useQuery({
       queryKey: ["videos", value],
-      queryFn: async () => {
-        try {
-          if (!value) throw new Error("Query parameter is missing.");
-
-          const parsedJson = JSON.parse(value);
-          const decodedUrl = decodeURIComponent(parsedJson.game);
-
-          console.log(decodedUrl);
-          const response = await fetch(
-            `/api/game_video_reviews?url=${decodedUrl}`
-          );
-
-          if (!response.ok) {
-            throw new Error(
-              `Failed to fetch game data: ${response.status} ${response.statusText}`
-            );
-          }
-
-          const data = await response.json();
-          console.log(data);
-          return data;
-        } catch (err) {
-          return err;
-        }
-      },
+      queryFn: () => getGameVideoReviews(value),
       enabled: Boolean(value),
       refetchOnWindowFocus: false,
       staleTime: 15 * 60 * 1000,
@@ -130,15 +77,7 @@ export default function GameDetails({ params }) {
     );
   }
 
-  if (!gameDetailsData) {
-    return (
-      <div className="min-h-[80vh] flex items-center justify-center">
-        <p className="text-xl font-bold">No data available for this query.</p>
-      </div>
-    );
-  }
-
-  const gameDetails = gameDetailsData.gameDetails[0];
+  const gameDetails = gameDetailsData?.gameDetails?.[0] || {};
   const {
     title,
     coverImage,
@@ -148,6 +87,7 @@ export default function GameDetails({ params }) {
     details,
     images,
     description,
+    type,
   } = gameDetails;
 
   return (
@@ -212,7 +152,7 @@ export default function GameDetails({ params }) {
                 pagination={{ clickable: true }}
                 navigation={{ enabled: true }}
               >
-                {images.map((image, index) => (
+                {images.map((image: string, index: number) => (
                   <SwiperSlide key={image} className="rounded-md">
                     <img
                       src={image}
@@ -235,7 +175,9 @@ export default function GameDetails({ params }) {
               {!gameVideoReviewsIsLoading ? (
                 <Swiper
                   slidesPerView={
-                    gameVideoReviewsData.gameVideoReviewsDetails.length / 4
+                    gameVideoReviewsData?.gameVideoReviewsDetails?.length
+                      ? gameVideoReviewsData.gameVideoReviewsDetails.length / 4
+                      : 1
                   }
                   spaceBetween={0}
                   className="max-w-[50vw] shadow-lg rounded-md border"
@@ -244,7 +186,7 @@ export default function GameDetails({ params }) {
                   navigation={{ enabled: true }}
                 >
                   {gameVideoReviewsData.gameVideoReviewsDetails.map(
-                    (review, index) => (
+                    (review: any, index: number) => (
                       <SwiperSlide
                         key={review.href}
                         className="rounded-md p-4 group relative"
@@ -272,50 +214,53 @@ export default function GameDetails({ params }) {
                   </p>
                 </div>
               )}
-
-              <div className="flex flex-col gap-2">
-                <h1 className="font-black lg:text-3xl">Reviews</h1>
-                <div className="border-b" />
-              </div>
-              {!gameReviewsIsLoading &&
-              gameReviewsData.gameMetacriticReviews.length > 0 ? (
-                <div className="flex flex-col gap-2">
-                  <div className="flex flex-col gap-6">
-                    {gameReviewsData.gameMetacriticReviews.map(
-                      (review: any) => (
-                        <a
-                          className="flex flex-row gap-4 transition-all delay-0 duration-200 hover:scale-105"
-                          key={review.fullReviewLink}
-                          href={review.fullReviewLink}
-                          target="_blank"
-                        >
-                          <p className="w-fit h-fit p-4 shadow-md border rounded-md">
-                            {review.score}
-                          </p>
-                          <div className="w-full flex flex-col">
-                            <div className="flex flex-row justify-between items-center">
-                              <h1 className="font-bold text-xl">
-                                {review.reviewer}
-                              </h1>
-                              <p className="text-sm text-gray-400">
-                                {review.platform}
-                              </p>
-                            </div>
-                            <div className="flex flex-row gap-2 text-gray-500">
-                              {review.quote}
-                            </div>
-                          </div>
-                        </a>
-                      )
-                    )}
+              {type != "Bundle" ? (
+                <>
+                  <div className="flex flex-col gap-2">
+                    <h1 className="font-black lg:text-3xl">Reviews</h1>
+                    <div className="border-b" />
                   </div>
-                </div>
-              ) : (
-                <div className="flex flex-row gap-6 items-center justify-center">
-                  <FourSquare size="medium" color="#ef4444" />
-                  <p className="font-black text-2xl">Loading reviews...</p>
-                </div>
-              )}
+                  {!gameReviewsIsLoading &&
+                  gameReviewsData.gameMetacriticReviews.length > 0 ? (
+                    <div className="flex flex-col gap-2">
+                      <div className="flex flex-col gap-6">
+                        {gameReviewsData.gameMetacriticReviews.map(
+                          (review: any) => (
+                            <a
+                              className="flex flex-row gap-4 transition-all delay-0 duration-200 hover:scale-105"
+                              key={review.fullReviewLink}
+                              href={review.fullReviewLink}
+                              target="_blank"
+                            >
+                              <p className="w-fit h-fit p-4 shadow-md border rounded-md">
+                                {review.score}
+                              </p>
+                              <div className="w-full flex flex-col">
+                                <div className="flex flex-row justify-between items-center">
+                                  <h1 className="font-bold text-xl">
+                                    {review.reviewer}
+                                  </h1>
+                                  <p className="text-sm text-gray-400">
+                                    {review.platform}
+                                  </p>
+                                </div>
+                                <div className="flex flex-row gap-2 text-gray-500">
+                                  {review.quote}
+                                </div>
+                              </div>
+                            </a>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-row gap-6 items-center justify-center">
+                      <FourSquare size="medium" color="#ef4444" />
+                      <p className="font-black text-2xl">Loading reviews...</p>
+                    </div>
+                  )}
+                </>
+              ) : null}
             </div>
           </section>
         </>

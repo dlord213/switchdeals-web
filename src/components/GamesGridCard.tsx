@@ -7,29 +7,47 @@ interface GameDetails {
   imageSrc: string;
   price: string;
   originalPrice: string;
+  type?: string; // Optional, as not all games might have a type
 }
 
 export default function GamesGridCard({ data }: { data: GameDetails }) {
+  if (!data?.title || !data?.link || !data?.imageSrc || !data?.price) {
+    return null;
+  }
+
   return (
     <Link
-      className="flex flex-col border rounded-md transition-all duration-200 delay-0 hover:scale-105 hover:shadow-xl cursor-pointer"
-      key={data.title}
       href={`/game/${encodeURIComponent(data.link)}`}
+      className="flex flex-col border rounded-md transition-transform duration-200 hover:scale-105 hover:shadow-xl"
+      key={data.title}
     >
-      <div className="flex flex-col items-end relative w-full h-[180px]">
-        <p className="w-fit m-2 z-10 py-2 px-4 bg-red-500 text-white rounded-md shadow-2xl">
-          {data.discount}
-        </p>
+      <div className="relative w-full h-[180px]">
+        {data.discount && (
+          <p className="absolute top-2 left-2 z-10 text-sm bg-red-500 text-white rounded-md px-2 py-1 shadow-lg">
+            {data.discount}
+          </p>
+        )}
+        {data.type === "Bundle" && (
+          <p className="absolute top-2 right-2 z-10 text-sm bg-green-500 text-white rounded-md px-2 py-1 shadow-lg">
+            Bundle
+          </p>
+        )}
         <img
           src={data.imageSrc}
-          className="absolute top-0 left-0 w-full rounded-tl-md rounded-tr-md"
+          alt={data.title}
+          className="w-full h-full object-cover rounded-t-md"
+          loading="lazy"
         />
       </div>
-      <div className="flex flex-col gap-2 py-2 px-4">
-        <h1 className="text-xl">{data.title}</h1>
-        <div className="flex flex-row gap-2">
-          <h1 className="font-bold text-lg">{data.price}</h1>
-          <h1 className="text-lg line-through">{data.originalPrice}</h1>
+      <div className="flex flex-col gap-2 p-4">
+        <h1 className="text-lg font-bold text-gray-800">{data.title}</h1>
+        <div className="flex flex-row items-center gap-2">
+          <p className="text-lg font-bold text-black">{data.price}</p>
+          {data.originalPrice && (
+            <p className="text-sm text-gray-500 line-through">
+              {data.originalPrice}
+            </p>
+          )}
         </div>
       </div>
     </Link>
