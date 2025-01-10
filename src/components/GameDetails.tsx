@@ -12,7 +12,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import { FourSquare } from "react-loading-indicators";
 import getGameDetails from "@/lib/get_game_details";
-import getGameReviews from "@/lib/get_game_reviews";
 
 export default function GameDetails({ params }: any) {
   const { value } = params;
