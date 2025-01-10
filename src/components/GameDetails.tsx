@@ -17,7 +17,7 @@ import getGameDetails from "@/lib/get_game_details";
 import getGameReviews from "@/lib/get_game_reviews";
 import getGameVideoReviews from "@/lib/get_game_video_reviews";
 
-export default function GameDetails({ params }: { params: { value: string } }) {
+export default function GameDetails({ params }: any) {
   const { value } = params;
 
   const {
