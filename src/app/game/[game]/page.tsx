@@ -25,11 +25,7 @@ export async function generateMetadata({
   };
 }
 
-export default function Page({
-  params,
-}: {
-  params: Promise<{ value: string }>;
-}) {
+export default function Page({ params }: { params: { value: string } }) {
   return (
     <main className="flex flex-col gap-4 xl:max-w-[70vw] mx-auto">
       <Header />
