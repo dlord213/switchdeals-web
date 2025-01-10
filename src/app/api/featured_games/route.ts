@@ -1,9 +1,9 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 
-import { type NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const { data } = await axios.get("https://www.dekudeals.com/recent-drops");
 
