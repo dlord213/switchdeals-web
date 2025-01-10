@@ -12,6 +12,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { FaAddressBook, FaAddressCard, FaCalendar } from "react-icons/fa6";
 import { Navigation, Pagination } from "swiper/modules";
 import { FourSquare } from "react-loading-indicators";
+import Link from "next/link";
 
 export default function GameDetails({ params }) {
   const { value } = params;
@@ -66,7 +67,6 @@ export default function GameDetails({ params }) {
         }
 
         const data = await response.json();
-        console.log(data);
         return data;
       } catch (err) {
         return err;
@@ -76,6 +76,41 @@ export default function GameDetails({ params }) {
     refetchOnWindowFocus: false,
     staleTime: 15 * 60 * 1000,
   });
+
+  const { data: gameVideoReviewsData, isLoading: gameVideoReviewsIsLoading } =
+    useQuery({
+      queryKey: ["videos", value],
+      queryFn: async () => {
+        try {
+          if (!value) throw new Error("Query parameter is missing.");
+
+          const parsedJson = JSON.parse(value);
+          const decodedUrl = decodeURIComponent(parsedJson.game);
+
+          console.log(decodedUrl);
+          const response = await fetch(
+            `/api/game_video_reviews?url=${decodedUrl}`
+          );
+
+          if (!response.ok) {
+            throw new Error(
+              `Failed to fetch game data: ${response.status} ${response.statusText}`
+            );
+          }
+
+          const data = await response.json();
+          console.log(data);
+          return data;
+        } catch (err) {
+          return err;
+        }
+      },
+      enabled: Boolean(value),
+      refetchOnWindowFocus: false,
+      staleTime: 15 * 60 * 1000,
+      retry: 3,
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    });
 
   if (isLoading) {
     return (
@@ -193,6 +228,51 @@ export default function GameDetails({ params }) {
                 <div className="border-b mb-2" />
                 <p>{description}</p>
               </div>
+              <div className="flex flex-col gap-2">
+                <h1 className="font-black lg:text-3xl">Video Reviews</h1>
+                <div className="border-b" />
+              </div>
+              {!gameVideoReviewsIsLoading ? (
+                <Swiper
+                  slidesPerView={
+                    gameVideoReviewsData.gameVideoReviewsDetails.length / 4
+                  }
+                  spaceBetween={0}
+                  className="max-w-[50vw] shadow-lg rounded-md border"
+                  modules={[Navigation, Pagination]}
+                  pagination={{ clickable: true }}
+                  navigation={{ enabled: true }}
+                >
+                  {gameVideoReviewsData.gameVideoReviewsDetails.map(
+                    (review, index) => (
+                      <SwiperSlide
+                        key={review.href}
+                        className="rounded-md p-4 group relative"
+                      >
+                        <Link href={review.href} target="_blank">
+                          <img
+                            src={review.imgSrc}
+                            className="w-full object-cover rounded-lg"
+                            alt={`Screenshot ${index + 1}`}
+                            key={review.imgSrc}
+                          />
+                          <p className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4 text-center">
+                            {review.imgAlt}
+                          </p>
+                        </Link>
+                      </SwiperSlide>
+                    )
+                  )}
+                </Swiper>
+              ) : (
+                <div className="flex flex-row gap-6 items-center justify-center">
+                  <FourSquare size="medium" color="#ef4444" />
+                  <p className="font-black text-2xl">
+                    Loading video reviews...
+                  </p>
+                </div>
+              )}
+
               <div className="flex flex-col gap-2">
                 <h1 className="font-black lg:text-3xl">Reviews</h1>
                 <div className="border-b" />

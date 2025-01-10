@@ -26,7 +26,7 @@ export default function GamesGridCard({ data }: { data: GameDetails }) {
         />
       </div>
       <div className="flex flex-col gap-2 py-2 px-4">
-        <h1>{data.title}</h1>
+        <h1 className="text-xl">{data.title}</h1>
         <div className="flex flex-row gap-2">
           <h1 className="font-bold text-lg">{data.price}</h1>
           <h1 className="text-lg line-through">{data.originalPrice}</h1>
