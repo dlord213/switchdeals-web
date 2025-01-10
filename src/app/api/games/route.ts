@@ -14,7 +14,9 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const response = await axios.get(url);
+    const response = await axios.get(
+      "https://api.allorigins.win/get?url=" + url
+    );
     const html = response.data;
 
     if (!html) return NextResponse.json({ games: [] }, { status: 500 });
