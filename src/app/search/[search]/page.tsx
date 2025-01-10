@@ -39,7 +39,7 @@ export default function Page({
   return (
     <main className="flex flex-col gap-4 xl:max-w-[70vw] mx-auto">
       <Header />
-      <div className="flex flex-col">
+      <div className="flex flex-col px-4 lg:px-0">
         <h1 className="font-bold lg:text-3xl">
           Searched for &apos;{decodeURIComponent(query.search)}&apos;
         </h1>
@@ -47,7 +47,7 @@ export default function Page({
 
       {data ? (
         <>
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid xl:grid-cols-4 lg:grid-cols-3 grid-cols-2 gap-4 px-4 xl:p-0">
             {data.games.map((game: any) => (
               <GamesGridCard data={game} key={game.link} />
             ))}

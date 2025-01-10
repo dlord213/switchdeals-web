@@ -47,15 +47,15 @@ export default function Header() {
   };
 
   return (
-    <nav className="flex flex-row justify-between shadow p-4 rounded-bl-md rounded-br-md items-center bg-red-500">
+    <nav className="flex flex-col md:flex-row justify-between shadow p-4 xl:rounded-bl-md xl:rounded-br-md gap-2 md:gap-0 md:items-center bg-red-500">
       <div className="flex flex-col">
-        <Link className="font-bold text-white xl:text-2xl" href="/">
+        <Link className="font-bold text-white md:text-2xl text-xl" href="/">
           SwitchDeals
         </Link>
       </div>
-      <div className="flex flex-row gap-4 items-center">
+      <div className="flex flex-row gap-4 md:items-center w-full md:w-fit">
         <form
-          className="relative"
+          className="relative w-full"
           onSubmit={handleSearchSubmit}
           role="search"
           aria-label="Search for games"
@@ -88,7 +88,7 @@ export default function Header() {
         </form>
         <Select
           options={currencyOptions}
-          className="z-50 min-w-[200px]"
+          className="z-50 min-w-[200px] hidden"
           value={selectedRegion}
           onChange={handleRegionChange}
           instanceId={0}
@@ -96,7 +96,12 @@ export default function Header() {
           aria-label="Select your region"
           isSearchable
         />
-        <FaEarthAsia size={24} color="#fafafa" aria-hidden="true" />
+        <FaEarthAsia
+          size={24}
+          color="#fafafa"
+          aria-hidden="true"
+          className="hidden"
+        />
       </div>
     </nav>
   );

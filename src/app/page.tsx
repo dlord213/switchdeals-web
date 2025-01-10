@@ -64,23 +64,15 @@ export default function Home() {
   };
 
   return (
-    <main className="flex flex-col gap-4 xl:max-w-[70vw] mx-auto">
+    <main className="flex flex-col xl:gap-4 xl:max-w-[70vw] mx-auto">
       <Header />
 
       <section>
-        {isFeaturedLoading && (
-          <div className="flex flex-col justify-center items-center">
-            <FourSquare size="large" color="#ef4444" />
-          </div>
-        )}
-        {isFeaturedError && (
-          <div className="flex flex-col justify-center items-center">
-            <h1 className="font-bold text-3xl">Error, please try again.</h1>
-          </div>
-        )}
-        {featuredGamesData && (
-          <GamesSlidableWideCard data={featuredGamesData.games} />
-        )}
+        <div className="hidden xl:block">
+          {featuredGamesData && (
+            <GamesSlidableWideCard data={featuredGamesData.games} />
+          )}
+        </div>
       </section>
 
       <section>
@@ -96,12 +88,11 @@ export default function Home() {
         )}
         {gamesData && (
           <>
-            <div className="flex flex-row gap-4 my-4 items-end">
+            <div className="flex flex-row gap-4 my-4 items-end px-4 xl:p-0">
               <FaBagShopping size={36} />
               <h1 className="text-2xl font-bold">Sales/Discounts</h1>
             </div>
-
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid xl:grid-cols-4 lg:grid-cols-3 grid-cols-2 gap-4 px-4 xl:p-0">
               {gamesData.games.map((game: any) => (
                 <GamesGridCard data={game} key={game.link} />
               ))}

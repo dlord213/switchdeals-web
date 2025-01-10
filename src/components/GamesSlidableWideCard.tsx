@@ -17,7 +17,7 @@ export default function GamesSlidableWideCard({
       <Swiper
         slidesPerView={1}
         spaceBetween={25}
-        className="w-full shadow-lg rounded-md"
+        className="hidden xl:w-full shadow-lg xl:rounded-md"
         modules={[Pagination]}
         pagination={{ clickable: true }}
       >
@@ -30,7 +30,7 @@ export default function GamesSlidableWideCard({
               <img
                 src={game.imgSrc}
                 alt={game.productTitle}
-                className="absolute top-0 left-0 w-full max-h-[360px] object-cover brightness-75 rounded-md"
+                className="absolute top-0 left-0 w-full max-h-[360px] object-cover brightness-75 xl:rounded-md"
               />
               <h2 className="z-10 font-black text-3xl text-white carousel-text-shadow">
                 {game.productTitle}

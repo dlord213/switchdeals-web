@@ -63,18 +63,21 @@ export default function GameDetails({ params }: any) {
   } = gameDetails;
 
   return (
-    <main className="flex flex-col gap-4 xl:max-w-[70vw] mx-auto">
+    <main className="flex flex-col md:gap-4 xl:max-w-[70vw] mx-auto">
       {gameDetailsData ? (
         <>
-          <section className="min-h-screen flex flex-row gap-4 mb-4">
-            <aside className="sticky top-0 left-0 flex flex-col gap-2 lg:basis-[30%] 2xl:basis-[30%] ">
-              <div className="flex flex-col gap-2 p-4 border shadow-md rounded-md">
-                <img
-                  src={image}
-                  className="w-full rounded-md object-contain"
-                  key={image}
-                />
-                <h1 className="font-black text-3xl">{title}</h1>
+          <section className="min-h-screen flex flex-col lg:flex-row gap-4 mb-4 xl:p-0 p-4">
+            <aside className="flex flex-col gap-2 lg:basis-[30%] 2xl:basis-[30%] h-fit lg:border lg:shadow-md lg:rounded-md lg:p-4">
+              <h1 className="block md:hidden font-black text-3xl">{title}</h1>
+              <img
+                src={image}
+                className="lg:w-full lg:max-w-full w-full rounded-md object-contain"
+                key={image}
+              />
+              <div className="flex flex-col lg:gap-2">
+                <h1 className="hidden md:block font-black lg:text-3xl md:text-2xl ">
+                  {title}
+                </h1>
                 <a
                   href={eshopLink}
                   target="_blank"
@@ -93,11 +96,11 @@ export default function GameDetails({ params }: any) {
               </div>
             </aside>
             {/*  */}
-            <div className="flex flex-col gap-6 lg:basis-[70%] 2xl:basis-[80%]">
+            <div className="flex flex-col gap-6 lg:basis-[70%] 2xl:basis-[80%] basis-auto">
               <Swiper
                 slidesPerView={1}
                 spaceBetween={25}
-                className="max-w-[50vw] shadow-lg rounded-md"
+                className="lg:max-w-[50vw] max-w-[92vw] shadow-lg rounded-md"
                 modules={[Navigation, Pagination]}
                 pagination={{ clickable: true }}
                 navigation={{ enabled: true }}
@@ -114,15 +117,19 @@ export default function GameDetails({ params }: any) {
                 ))}
               </Swiper>
               <div className="flex flex-col gap-2">
-                <h1 className="font-black lg:text-3xl">Description</h1>
+                <h1 className="font-black lg:text-3xl md:text-2xl text-xl">
+                  Description
+                </h1>
                 <div className="border-b mb-2" />
                 <p>{description}</p>
               </div>
               <div className="flex flex-col gap-2">
-                <h1 className="font-black lg:text-3xl">Recommendations</h1>
+                <h1 className="font-black lg:text-3xl md:text-2xl text-xl">
+                  Recommendations
+                </h1>
                 <div className="border-b" />
               </div>
-              <div className="grid xl:grid-cols-5 gap-2">
+              <div className="grid 2xl:grid-cols-5 xl:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-2">
                 {recommendations.map((game: any) => (
                   <Link
                     href={`/game/${encodeURIComponent(game.href)}`}

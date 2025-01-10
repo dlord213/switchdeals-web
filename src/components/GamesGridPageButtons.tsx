@@ -14,7 +14,7 @@ export default function GamesGridPageButtons({
   isNextDisabled = false,
 }: GamesGridPageButtons) {
   return (
-    <div className="flex items-center justify-end gap-4 my-4">
+    <div className="flex items-center justify-end lg:gap-4 gap-2 my-4 lg:mx-0 mx-4">
       <button
         className={`py-2 px-6 flex items-center justify-center rounded-md shadow border transition-colors duration-200 ${
           isPrevDisabled
