@@ -8,9 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   try {
-    const { data } = await axios.get(
-      "https://ntdeals.net/us-store/discounts?sort=best-new-deals"
-    );
+    const { data } = await axios.get("https://www.dekudeals.com/hottest");
 
     const $ = cheerio.load(data);
 
