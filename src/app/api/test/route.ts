@@ -10,14 +10,7 @@ export async function GET(request: NextRequest) {
   try {
     const { data } = await axios.get("https://www.gsmarena.com/");
 
-    if (!data.contents) {
-      return NextResponse.json(
-        { error: "Failed to fetch page content." },
-        { status: 500 }
-      );
-    }
-
-    const $ = cheerio.load(data.contents);
+    const $ = cheerio.load(data);
 
     // Extract latest phones
     const latestPhones: {
