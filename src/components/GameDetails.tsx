@@ -13,6 +13,12 @@ import { Navigation, Pagination } from "swiper/modules";
 import { FourSquare } from "react-loading-indicators";
 import getGameDetails from "@/lib/get_game_details";
 import Link from "next/link";
+import {
+  FaAddressBook,
+  FaArrowDown,
+  FaCalendar,
+  FaChalkboardUser,
+} from "react-icons/fa6";
 
 export default function GameDetails({ params }: any) {
   const { value } = params;
@@ -94,6 +100,29 @@ export default function GameDetails({ params }: any) {
                   </div>
                 </a>
               </div>
+              <div className="flex flex-col lg:gap-2 my-2">
+                <p className="flex flex-row gap-3 items-center">
+                  <FaArrowDown />
+                  {gameDetails["Download size"] ??
+                    "Download size not available"}
+                </p>
+                <p className="flex flex-row gap-3 items-center">
+                  <FaChalkboardUser />
+                  {gameDetails["Play modes"] ?? "Play modes not available"}
+                </p>
+                <p className="flex flex-row gap-3 items-center">
+                  <FaAddressBook />
+                  {gameDetails["Publisher"]?.[0]?.genreName ??
+                    "Publisher information not available"}
+                </p>
+                <p className="flex flex-row gap-3 items-center">
+                  <FaCalendar />
+                  {gameDetails["Release date"]?.[0] ?? "Unknown date"}
+                  {gameDetails["Release date"]?.[1]
+                    ? `, ${gameDetails["Release date"][1]}`
+                    : ""}
+                </p>
+              </div>
             </aside>
             {/*  */}
             <div className="flex flex-col gap-6 lg:basis-[70%] 2xl:basis-[80%] basis-auto">
@@ -121,7 +150,11 @@ export default function GameDetails({ params }: any) {
                   Description
                 </h1>
                 <div className="border-b mb-2" />
-                <p>{description}</p>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: description.replace(/\n/g, "<br>"),
+                  }}
+                />
               </div>
               <div className="flex flex-col gap-2">
                 <h1 className="font-black lg:text-3xl md:text-2xl text-xl">

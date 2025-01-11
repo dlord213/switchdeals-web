@@ -5,7 +5,6 @@ export default async function getGameVideoReviews(query: string) {
     const parsedJson = JSON.parse(query);
     const decodedUrl = decodeURIComponent(parsedJson.game);
 
-    console.log(decodedUrl);
     const response = await fetch(`/api/game_video_reviews?url=${decodedUrl}`);
 
     if (!response.ok) {

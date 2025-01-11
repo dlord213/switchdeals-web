@@ -16,7 +16,6 @@ export async function generateMetadata({
 
   const response = await fetch(`${baseUrl}/api/game_details?url=${decodedUrl}`);
   const gameDetails = await response.json();
-  console.log(gameDetails);
 
   return {
     title: "SwitchDeals - " + gameDetails.gameDetails?.title || "Game Details",
