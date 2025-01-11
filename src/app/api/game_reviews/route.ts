@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
       );
       await page.setViewport({ width: 1080, height: 1024 });
       await page.waitForSelector('[data-testid="product-reviews"]', {
-        timeout: 60000,
+        timeout: 10000,
       });
 
       return await page.$$eval(
