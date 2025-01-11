@@ -4,17 +4,28 @@ import puppeteer, { Browser } from "puppeteer";
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const url = searchParams.get("url");
-  const game = url?.split("/").pop();
 
-  if (!url || !url.startsWith("/")) {
-    return NextResponse.json({ error: "Invalid URL" }, { status: 400 });
+  if (!url || !url.startsWith("/items/")) {
+    return NextResponse.json(
+      { error: "Invalid or missing 'game' parameter" },
+      { status: 400 }
+    );
+  }
+
+  const gameSlug = url.split("/").pop()?.split("?")[0];
+
+  if (!gameSlug) {
+    return NextResponse.json(
+      { error: "Failed to extract game slug from path" },
+      { status: 400 }
+    );
   }
 
   const getGameMetacriticReviews = async (browser: Browser) => {
     const page = await browser.newPage();
     try {
       await page.goto(
-        `https://www.metacritic.com/game/${game}/critic-reviews/`,
+        `https://www.metacritic.com/game/${gameSlug}/critic-reviews/`,
         { waitUntil: "domcontentloaded" }
       );
       await page.setViewport({ width: 1080, height: 1024 });

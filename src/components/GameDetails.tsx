@@ -11,6 +11,7 @@ import { FaShoppingBag } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import { FourSquare } from "react-loading-indicators";
+import { BsNintendoSwitch } from "react-icons/bs";
 import getGameDetails from "@/lib/get_game_details";
 import Link from "next/link";
 import {
@@ -18,7 +19,10 @@ import {
   FaArrowDown,
   FaCalendar,
   FaChalkboardUser,
+  FaPlaystation,
+  FaXbox,
 } from "react-icons/fa6";
+import getGameReviews from "@/lib/get_game_reviews";
 
 export default function GameDetails({ params }: any) {
   const { value } = params;
@@ -36,6 +40,15 @@ export default function GameDetails({ params }: any) {
     staleTime: 15 * 60 * 1000,
     retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+  });
+
+  const { data: gameReviewsData, isLoading: gameReviewsIsLoading } = useQuery({
+    queryKey: ["reviews", value],
+    queryFn: () => getGameReviews(value),
+    enabled: Boolean(value),
+    refetchOnWindowFocus: false,
+    staleTime: 15 * 60 * 1000,
+    retry: false,
   });
 
   if (isLoading) {
@@ -115,13 +128,15 @@ export default function GameDetails({ params }: any) {
                   {gameDetails["Publisher"]?.[0]?.genreName ??
                     "Publisher information not available"}
                 </p>
-                <p className="flex flex-row gap-3 items-center">
-                  <FaCalendar />
-                  {gameDetails["Release date"]?.[0] ?? "Unknown date"}
-                  {gameDetails["Release date"]?.[1]
-                    ? `, ${gameDetails["Release date"][1]}`
-                    : ""}
-                </p>
+                {gameDetails["Release date"] && (
+                  <p className="flex flex-row gap-3 items-center">
+                    <FaCalendar />
+                    {gameDetails["Release date"]?.[0] ?? "Unknown date"}
+                    {gameDetails["Release date"]?.[1]
+                      ? `, ${gameDetails["Release date"][1]}`
+                      : ""}
+                  </p>
+                )}
               </div>
             </aside>
             {/*  */}
@@ -162,7 +177,7 @@ export default function GameDetails({ params }: any) {
                 </h1>
                 <div className="border-b" />
               </div>
-              <div className="grid 2xl:grid-cols-5 xl:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-2">
+              <div className="grid 2xl:grid-cols-6 xl:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-2">
                 {recommendations.map((game: any) => (
                   <Link
                     href={`/game/${encodeURIComponent(game.href)}`}
@@ -181,7 +196,13 @@ export default function GameDetails({ params }: any) {
                   </Link>
                 ))}
               </div>
-              {/* {!gameReviewsIsLoading &&
+              <div className="flex flex-col gap-2">
+                <h1 className="font-black lg:text-3xl md:text-2xl text-xl">
+                  Reviews
+                </h1>
+                <div className="border-b" />
+              </div>
+              {!gameReviewsIsLoading &&
               gameReviewsData.gameMetacriticReviews.length > 0 ? (
                 <div className="flex flex-col gap-2">
                   <div className="flex flex-col gap-6">
@@ -197,13 +218,17 @@ export default function GameDetails({ params }: any) {
                             {review.score}
                           </p>
                           <div className="w-full flex flex-col">
-                            <div className="flex flex-row justify-between items-center">
+                            <div className="flex flex-row gap-4 items-center">
                               <h1 className="font-bold text-xl">
                                 {review.reviewer}
                               </h1>
-                              <p className="text-sm text-gray-400">
-                                {review.platform}
-                              </p>
+                              {review.platform.includes("Xbox") && <FaXbox />}
+                              {review.platform.includes("Nintendo") && (
+                                <BsNintendoSwitch />
+                              )}
+                              {review.platform.includes("PlayStation") && (
+                                <FaPlaystation />
+                              )}
                             </div>
                             <div className="flex flex-row gap-2 text-gray-500">
                               {review.quote}
@@ -219,7 +244,7 @@ export default function GameDetails({ params }: any) {
                   <FourSquare size="medium" color="#ef4444" />
                   <p className="font-black text-2xl">Loading reviews...</p>
                 </div>
-              )} */}
+              )}
             </div>
           </section>
         </>
