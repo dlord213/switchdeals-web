@@ -42,6 +42,7 @@ export async function GET(request: NextRequest) {
 
       return videos;
     } catch (err) {
+      console.error(err);
       throw new Error("Failed to scrape data from the URL.");
     } finally {
       await browser.close();
