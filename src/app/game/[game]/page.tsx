@@ -1,5 +1,6 @@
 import GameDetails from "@/components/GameDetails";
 import Header from "@/components/Header";
+
 import { headers } from "next/headers";
 
 export async function generateMetadata({

@@ -2,25 +2,24 @@
 "use client";
 
 import Header from "@/components/Header";
-import { useState, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { FaBagShopping } from "react-icons/fa6";
 import GamesGridCard from "@/components/GamesGridCard";
 import GamesGridPageButtons from "@/components/GamesGridPageButtons";
 import GamesSlidableWideCard from "@/components/GamesSlidableWideCard";
-import useRegion from "@/stores/useRegion";
+
+import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { FaBagShopping } from "react-icons/fa6";
 import { FourSquare } from "react-loading-indicators";
 
 export default function Home() {
-  const { region } = useRegion();
   const [page, setPage] = useState(1);
 
   const link = useMemo(
     () =>
-      `https://ntdeals.net/${region}-store/discounts${
-        page === 1 ? "" : `/${page}`
-      }?sort=deal-rating`,
-    [region, page]
+      `https://www.dekudeals.com/hottest?filter[store]=eshop${
+        page === 1 ? "" : `&page=${page}`
+      }`,
+    [page]
   );
 
   const {
@@ -30,7 +29,7 @@ export default function Home() {
   } = useQuery({
     queryKey: ["gamesData", link],
     queryFn: async () => {
-      const response = await fetch(`api/games/`);
+      const response = await fetch(`api/games?page=${page}`);
       if (!response.ok) throw new Error("Failed to fetch games data");
       return response.json();
     },

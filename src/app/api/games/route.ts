@@ -1,16 +1,20 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const page = searchParams.get("page") || "1";
+
   try {
     const { data } = await axios.get(
-      "https://www.dekudeals.com/hottest?filter[store]=eshop"
+      `https://www.dekudeals.com/hottest?filter[store]=eshop&page=${page}`
     );
 
-    if (!data) return NextResponse.json({ games: [] }, { status: 500 });
-
+    if (!data) {
+      return NextResponse.json({ games: [] }, { status: 500 });
+    }
     const $ = cheerio.load(data);
 
     const games: {
