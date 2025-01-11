@@ -97,21 +97,23 @@ export default function GameDetails({ params }: any) {
                 <h1 className="hidden md:block font-black lg:text-3xl md:text-2xl ">
                   {title}
                 </h1>
-                <a
-                  href={eshopLink}
-                  target="_blank"
-                  className="flex flex-row gap-2 items-center bg-amber-500 rounded-md p-4 text-white shadow duration-200 delay-0 transition-all hover:shadow-xl cursor-pointer hover:scale-105"
-                >
-                  <FaShoppingBag size={28} />
-                  <div className="flex flex-col">
-                    <p className="font-bold">Nintendo eShop</p>
-                    <p className="font-medium">
-                      {discountedPrice}
-                      {"  "}
-                      <span className="line-through">{MSRP}</span>
-                    </p>
-                  </div>
-                </a>
+                {eshopLink.includes("www.nintendo.com/") && (
+                  <a
+                    href={eshopLink}
+                    target="_blank"
+                    className="flex flex-row gap-2 items-center bg-amber-500 rounded-md p-4 text-white shadow duration-200 delay-0 transition-all hover:shadow-xl cursor-pointer hover:scale-105"
+                  >
+                    <FaShoppingBag size={28} />
+                    <div className="flex flex-col">
+                      <p className="font-bold">Nintendo eShop</p>
+                      <p className="font-medium">
+                        {discountedPrice}
+                        {"  "}
+                        <span className="line-through">{MSRP}</span>
+                      </p>
+                    </div>
+                  </a>
+                )}
               </div>
               <div className="flex flex-col lg:gap-2 my-2">
                 <p className="flex flex-row gap-3 items-center">
