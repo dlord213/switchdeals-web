@@ -13,14 +13,26 @@ import { FourSquare } from "react-loading-indicators";
 
 export default function Home() {
   const [page, setPage] = useState(1);
+  const [type, setType] = useState("");
+  const [sort, setSort] = useState("");
 
-  const link = useMemo(
-    () =>
-      `https://www.dekudeals.com/hottest?filter[store]=eshop${
-        page === 1 ? "" : `&page=${page}`
-      }`,
-    [page]
-  );
+  const link = useMemo(() => {
+    let baseUrl = `https://www.dekudeals.com/hottest?filter[store]=eshop`;
+
+    if (page !== 1) {
+      baseUrl += `&page=${page}`;
+    }
+
+    if (type) {
+      baseUrl += `&${type}`;
+    }
+
+    if (sort) {
+      baseUrl += `&sort=${sort}`;
+    }
+
+    return baseUrl;
+  }, [page, type, sort]);
 
   const {
     data: gamesData,
@@ -29,7 +41,10 @@ export default function Home() {
   } = useQuery({
     queryKey: ["gamesData", link],
     queryFn: async () => {
-      const response = await fetch(`api/games?page=${page}`);
+      console.log(link);
+      const response = await fetch(
+        `api/games?page=${page}&type=${type}&sort=${sort}`
+      );
       if (!response.ok) throw new Error("Failed to fetch games data");
       return response.json();
     },
@@ -87,6 +102,38 @@ export default function Home() {
               <FaBagShopping size={36} />
               <h1 className="text-2xl font-bold">Sales/Discounts</h1>
             </div>
+            <div className="flex flex-row gap-2 my-4">
+              <button
+                className={
+                  type === ""
+                    ? "px-4 py-2 border rounded-md shadow bg-red-500 text-white cursor-pointer"
+                    : "px-4 py-2 border rounded-md shadow cursor-pointer"
+                }
+                onClick={() => setType("")}
+              >
+                Game
+              </button>
+              <button
+                className={
+                  type === "filter[type]=bundle"
+                    ? "px-4 py-2 border rounded-md shadow bg-red-500 text-white cursor-pointer"
+                    : "px-4 py-2 border rounded-md shadow cursor-pointer"
+                }
+                onClick={() => setType("filter[type]=bundle")}
+              >
+                Bundle
+              </button>
+              <select
+                className="border px-2 rounded-md shadow"
+                value={sort}
+                onChange={(e) => setSort(e.target.value)}
+              >
+                <option value="hottest">Hottest deals</option>
+                <option value="most_wanted">Most wanted</option>
+                <option value="most_owned">Most owned</option>
+              </select>
+            </div>
+
             <div className="grid xl:grid-cols-4 lg:grid-cols-3 grid-cols-2 gap-4 px-4 xl:p-0">
               {gamesData.games.map((game: any) => (
                 <GamesGridCard data={game} key={game.link} />
