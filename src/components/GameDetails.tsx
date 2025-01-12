@@ -11,7 +11,6 @@ import { FaShoppingBag } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import { FourSquare } from "react-loading-indicators";
-import { BsNintendoSwitch } from "react-icons/bs";
 import getGameDetails from "@/lib/get_game_details";
 import Link from "next/link";
 import {
@@ -19,10 +18,7 @@ import {
   FaArrowDown,
   FaCalendar,
   FaChalkboardUser,
-  FaPlaystation,
-  FaXbox,
 } from "react-icons/fa6";
-import getGameReviews from "@/lib/get_game_reviews";
 
 export default function GameDetails({ params }: any) {
   const { value } = params;
@@ -40,15 +36,6 @@ export default function GameDetails({ params }: any) {
     staleTime: 15 * 60 * 1000,
     retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-  });
-
-  const { data: gameReviewsData, isLoading: gameReviewsIsLoading } = useQuery({
-    queryKey: ["reviews", value],
-    queryFn: () => getGameReviews(value),
-    enabled: Boolean(value),
-    refetchOnWindowFocus: false,
-    staleTime: 15 * 60 * 1000,
-    retry: false,
   });
 
   if (isLoading) {
@@ -198,53 +185,6 @@ export default function GameDetails({ params }: any) {
                   </Link>
                 ))}
               </div>
-
-              {!gameReviewsIsLoading &&
-              gameReviewsData.gameMetacriticReviews ? (
-                <>
-                  <div className="flex flex-col gap-2">
-                    <h1 className="font-black lg:text-3xl md:text-2xl text-xl">
-                      Reviews
-                    </h1>
-                    <div className="border-b" />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <div className="flex flex-col gap-6">
-                      {gameReviewsData.gameMetacriticReviews.map(
-                        (review: any) => (
-                          <a
-                            className="flex flex-row gap-4 transition-all delay-0 duration-200 hover:scale-105"
-                            key={review.reviewer}
-                            href={review.fullReviewLink}
-                            target="_blank"
-                          >
-                            <p className="w-fit h-fit p-4 shadow-md border rounded-md">
-                              {review.score}
-                            </p>
-                            <div className="w-full flex flex-col">
-                              <div className="flex flex-row gap-4 items-center">
-                                <h1 className="font-bold text-xl">
-                                  {review.reviewer}
-                                </h1>
-                                {review.platform.includes("Xbox") && <FaXbox />}
-                                {review.platform.includes("Nintendo") && (
-                                  <BsNintendoSwitch />
-                                )}
-                                {review.platform.includes("PlayStation") && (
-                                  <FaPlaystation />
-                                )}
-                              </div>
-                              <div className="flex flex-row gap-2 text-gray-500">
-                                {review.quote}
-                              </div>
-                            </div>
-                          </a>
-                        )
-                      )}
-                    </div>
-                  </div>
-                </>
-              ) : null}
             </div>
           </section>
         </>
