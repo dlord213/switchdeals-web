@@ -41,7 +41,7 @@ export default function GameDetails({ params }: any) {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <FourSquare size="large" color="#ef4444" />
+        <FourSquare size="large" color="#B03B48" />
       </div>
     );
   }
@@ -49,7 +49,7 @@ export default function GameDetails({ params }: any) {
   if (isError) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center">
-        <p className="text-xl text-red-500 font-bold">
+        <p className="text-xl text-[#B03B48] font-bold">
           {error?.message || "An error occurred while loading data."}
         </p>
       </div>
@@ -190,7 +190,7 @@ export default function GameDetails({ params }: any) {
         </>
       ) : (
         <div className="min-h-[80vh] flex flex-row gap-8 items-center justify-center">
-          <FourSquare size="large" color="#ef4444" />
+          <FourSquare size="large" color="#B03B48" />
         </div>
       )}
     </main>

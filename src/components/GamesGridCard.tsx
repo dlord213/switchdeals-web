@@ -14,7 +14,7 @@ export default function GamesGridCard({ data }: { data: GameGridDetails }) {
     >
       <div className="relative w-full h-[180px]">
         {data.discount && (
-          <p className="absolute top-2 left-2 z-10 text-sm bg-red-500 text-white rounded-md px-2 py-1 shadow-lg">
+          <p className="absolute top-2 left-2 z-10 text-sm bg-[#B03B48] text-white rounded-md px-2 py-1 shadow-lg">
             {data.discount}
           </p>
         )}

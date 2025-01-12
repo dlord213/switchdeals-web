@@ -10,6 +10,7 @@ import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FaBagShopping } from "react-icons/fa6";
 import { FourSquare } from "react-loading-indicators";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   const [page, setPage] = useState(1);
@@ -74,9 +75,8 @@ export default function Home() {
   };
 
   return (
-    <main className="flex flex-col xl:gap-4 xl:max-w-[70vw] mx-auto">
+    <main className="flex flex-col xl:gap-4 xl:max-w-[70vw] mx-auto min-h-screen">
       <Header />
-
       <section>
         <div className="hidden xl:block">
           {featuredGamesData && (
@@ -84,11 +84,10 @@ export default function Home() {
           )}
         </div>
       </section>
-
       <section>
         {isGamesLoading && (
-          <div className="flex flex-col justify-center items-center">
-            <FourSquare size="large" color="#ef4444" />
+          <div className="flex flex-col justify-center items-center my-8">
+            <FourSquare size="large" color="#B03B48" />
           </div>
         )}
         {isGamesError && (
@@ -98,15 +97,15 @@ export default function Home() {
         )}
         {gamesData && (
           <>
-            <div className="flex flex-row gap-4 my-4 items-end px-4 xl:p-0">
+            <div className="flex flex-row gap-2 my-4 lg:my-0 lg:gap-0 items-end px-4 xl:p-0">
               <FaBagShopping size={36} />
               <h1 className="text-2xl font-bold">Sales/Discounts</h1>
             </div>
-            <div className="flex flex-row gap-2 my-4">
+            <div className="flex flex-row gap-2 my-4 px-4 xl:p-0">
               <button
                 className={
                   type === ""
-                    ? "px-4 py-2 border rounded-md shadow bg-red-500 text-white cursor-pointer"
+                    ? "px-4 py-2 border rounded-md shadow bg-[#B03B48] text-white cursor-pointer"
                     : "px-4 py-2 border rounded-md shadow cursor-pointer"
                 }
                 onClick={() => setType("")}
@@ -116,7 +115,7 @@ export default function Home() {
               <button
                 className={
                   type === "filter[type]=bundle"
-                    ? "px-4 py-2 border rounded-md shadow bg-red-500 text-white cursor-pointer"
+                    ? "px-4 py-2 border rounded-md shadow bg-[#B03B48] text-white cursor-pointer"
                     : "px-4 py-2 border rounded-md shadow cursor-pointer"
                 }
                 onClick={() => setType("filter[type]=bundle")}
@@ -133,7 +132,6 @@ export default function Home() {
                 <option value="most_owned">Most owned</option>
               </select>
             </div>
-
             <div className="grid xl:grid-cols-4 lg:grid-cols-3 grid-cols-2 gap-4 px-4 xl:p-0">
               {gamesData.games.map((game: any) => (
                 <GamesGridCard data={game} key={game.link} />
@@ -146,6 +144,7 @@ export default function Home() {
           </>
         )}
       </section>
+      {gamesData && <Footer />}
     </main>
   );
 }

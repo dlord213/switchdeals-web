@@ -47,7 +47,7 @@ export default function Header() {
   };
 
   return (
-    <nav className="flex flex-col md:flex-row justify-between shadow p-4 xl:rounded-bl-md xl:rounded-br-md gap-2 md:gap-0 md:items-center bg-red-500">
+    <nav className="flex flex-col md:flex-row justify-between shadow p-4 xl:rounded-bl-md xl:rounded-br-md gap-2 md:gap-0 md:items-center bg-[#B03B48]">
       <div className="flex flex-col">
         <Link className="font-bold text-white md:text-2xl text-xl" href="/">
           SwitchDeals
