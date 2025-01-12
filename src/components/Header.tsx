@@ -49,7 +49,7 @@ export default function Header() {
   return (
     <nav className="flex flex-col md:flex-row justify-between shadow p-4 xl:rounded-bl-md xl:rounded-br-md gap-2 md:gap-0 md:items-center bg-[#B03B48]">
       <div className="flex flex-row gap-2 items-center">
-        <img src="assets/logo/icon.png" className="w-full max-w-[48px]" />
+        <img src="/assets/logo/icon.png" className="w-full max-w-[48px]" />
         <Link className="font-bold text-white md:text-2xl text-xl" href="/">
           SwitchDeals
         </Link>

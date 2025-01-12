@@ -97,7 +97,7 @@ export default function Home() {
         )}
         {gamesData && (
           <>
-            <div className="flex flex-row gap-2 my-4 xl:my-0 lg:gap-0 items-end px-4 xl:p-0">
+            <div className="flex flex-row gap-4 my-4 xl:my-0 items-end px-4 xl:p-0">
               <FaBagShopping size={36} />
               <h1 className="text-2xl font-bold">Sales/Discounts</h1>
             </div>
