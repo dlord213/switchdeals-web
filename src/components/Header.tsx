@@ -4,7 +4,7 @@ import useRegion from "@/stores/useRegion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useMemo, useCallback } from "react";
-import { FaEarthAsia } from "react-icons/fa6";
+import { FaAndroid, FaEarthAsia } from "react-icons/fa6";
 import Select, { SingleValue } from "react-select";
 
 export default function Header() {
@@ -55,6 +55,13 @@ export default function Header() {
         </Link>
       </div>
       <div className="flex flex-row gap-4 md:items-center w-full md:w-fit">
+        <Link
+          href="https://github.com/dlord213/switchdeals-android/releases/tag/SwitchDeals"
+          target="_blank"
+          className="px-6 py-0 flex flex-col justify-center items-center bg-slate-100 rounded-md"
+        >
+          <FaAndroid size={36} />
+        </Link>
         <form
           className="relative w-full"
           onSubmit={handleSearchSubmit}
