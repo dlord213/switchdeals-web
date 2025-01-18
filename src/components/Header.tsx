@@ -56,8 +56,7 @@ export default function Header() {
       </div>
       <div className="flex flex-row gap-4 md:items-center w-full md:w-fit">
         <Link
-          href="https://github.com/dlord213/switchdeals-android/releases/tag/SwitchDeals"
-          target="_blank"
+          href="/android"
           className="px-6 py-0 flex flex-col justify-center items-center bg-slate-100 rounded-md"
         >
           <FaAndroid size={36} />
