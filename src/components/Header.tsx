@@ -40,7 +40,7 @@ export default function Header() {
           href="/android"
           className="px-6 py-0 flex flex-col justify-center items-center bg-slate-100 rounded-md dark:bg-zinc-800 transition-all delay-0 duration-200 dark:hover:bg-zinc-700"
         >
-          <FaAndroid size={36} className="text-slate-50 dark:text-zinc-500" />
+          <FaAndroid size={36} className="text-slate-900 dark:text-zinc-500" />
         </Link>
         <form
           className="relative w-full"
