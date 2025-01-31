@@ -1,5 +1,3 @@
-import useRegion from "@/stores/useRegion";
-
 export default async function getGameDetails(query: string, region: string) {
   if (!query) throw new Error("Query parameter is missing.");
 
