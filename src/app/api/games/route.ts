@@ -1,4 +1,4 @@
-import axios from "axios";
+import { client, cookieJar } from "@/lib/client";
 import * as cheerio from "cheerio";
 
 import { NextRequest, NextResponse } from "next/server";
@@ -8,10 +8,33 @@ export async function GET(request: NextRequest) {
   const page = searchParams.get("page") || "1";
   const type = searchParams.get("type") || "";
   const sort = searchParams.get("sort") || "";
+  const region = searchParams.get("region") || "";
+
+  console.log(region);
 
   try {
-    const { data } = await axios.get(
-      `https://www.dekudeals.com/hottest?filter[store]=eshop&page=${page}&${type}&sort=${sort}`
+    await client.post("https://www.dekudeals.com/locale", `country=${region}`, {
+      jar: cookieJar,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Origin: "https://www.dekudeals.com",
+        Referer:
+          "https://www.dekudeals.com/hottest?filter[store]=eshop&page=${page}&${type}&sort=${sort}",
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
+      },
+      maxRedirects: 5,
+    });
+
+    const { data } = await client.get(
+      `https://www.dekudeals.com/hottest?filter[store]=eshop${region}&page=${page}&${type}&sort=${sort}`,
+      {
+        jar: cookieJar,
+        headers: {
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
+        },
+      }
     );
 
     if (!data) {

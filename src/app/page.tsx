@@ -11,14 +11,20 @@ import { useQuery } from "@tanstack/react-query";
 import { FaBagShopping } from "react-icons/fa6";
 import { FourSquare } from "react-loading-indicators";
 import Footer from "@/components/Footer";
+import useRegion from "@/stores/useRegion";
 
 export default function Home() {
   const [page, setPage] = useState(1);
   const [type, setType] = useState("");
   const [sort, setSort] = useState("");
+  const { region } = useRegion();
 
   const link = useMemo(() => {
     let baseUrl = `https://www.dekudeals.com/hottest?filter[store]=eshop`;
+
+    if (region != "us") {
+      baseUrl += `_${region}`;
+    }
 
     if (page !== 1) {
       baseUrl += `&page=${page}`;
@@ -33,7 +39,7 @@ export default function Home() {
     }
 
     return baseUrl;
-  }, [page, type, sort]);
+  }, [page, type, sort, region]);
 
   const {
     data: gamesData,
@@ -44,7 +50,7 @@ export default function Home() {
     queryFn: async () => {
       console.log(link);
       const response = await fetch(
-        `api/games?page=${page}&type=${type}&sort=${sort}`
+        `api/games?region=${region}&page=${page}&type=${type}&sort=${sort}`
       );
       if (!response.ok) throw new Error("Failed to fetch games data");
       return response.json();
@@ -75,7 +81,7 @@ export default function Home() {
   };
 
   return (
-    <main className="flex flex-col xl:gap-4 xl:max-w-[70vw] mx-auto min-h-screen">
+    <main className="flex flex-col xl:gap-4 xl:max-w-[70vw] mx-auto min-h-screen ">
       <Header />
       <section>
         <div className="hidden xl:block">
@@ -98,15 +104,17 @@ export default function Home() {
         {gamesData && (
           <>
             <div className="flex flex-row gap-4 my-4 xl:my-0 items-end px-4 xl:p-0">
-              <FaBagShopping size={36} />
-              <h1 className="text-2xl font-bold">Sales/Discounts</h1>
+              <FaBagShopping size={36} className="dark:text-zinc-200" />
+              <h1 className="text-2xl font-bold dark:text-zinc-200">
+                Sales/Discounts
+              </h1>
             </div>
             <div className="flex flex-row gap-2 my-4 px-4 xl:p-0">
               <button
                 className={
                   type === ""
-                    ? "px-4 py-2 border rounded-md shadow bg-[#B03B48] text-white cursor-pointer"
-                    : "px-4 py-2 border rounded-md shadow cursor-pointer"
+                    ? "px-4 py-2 border rounded-md shadow bg-[#B03B48] text-white cursor-pointer dark:bg-zinc-900 dark:border-zinc-700"
+                    : "px-4 py-2 border rounded-md shadow cursor-pointer dark:border-0 dark:bg-zinc-900"
                 }
                 onClick={() => setType("")}
               >
@@ -115,15 +123,15 @@ export default function Home() {
               <button
                 className={
                   type === "filter[type]=bundle"
-                    ? "px-4 py-2 border rounded-md shadow bg-[#B03B48] text-white cursor-pointer"
-                    : "px-4 py-2 border rounded-md shadow cursor-pointer"
+                    ? "px-4 py-2 border rounded-md shadow bg-[#B03B48] text-white cursor-pointer dark:bg-zinc-900 dark:border-zinc-700"
+                    : "px-4 py-2 border rounded-md shadow cursor-pointer dark:border-0 dark:bg-zinc-900"
                 }
                 onClick={() => setType("filter[type]=bundle")}
               >
                 Bundle
               </button>
               <select
-                className="border px-2 rounded-md shadow"
+                className="bg-gray-100 text-gray-900 border border-gray-300 px-3 py-1 rounded-md dark:bg-zinc-900 dark:text-[#fafafa] dark:border-zinc-800 outline-none"
                 value={sort}
                 onChange={(e) => setSort(e.target.value)}
               >

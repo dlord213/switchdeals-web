@@ -73,7 +73,7 @@ export default function GameDetails({ params }: any) {
       {gameDetailsData ? (
         <>
           <section className="min-h-screen flex flex-col lg:flex-row gap-4 mb-4 xl:p-0 p-4">
-            <aside className="flex flex-col gap-2 lg:basis-[30%] 2xl:basis-[30%] h-fit lg:border lg:shadow-md lg:rounded-md lg:p-4">
+            <aside className="flex flex-col gap-2 lg:basis-[30%] 2xl:basis-[30%] h-fit lg:border lg:shadow-md lg:rounded-md lg:p-4 dark:border-0 dark:bg-zinc-900 dark:p-4 dark:rounded-md">
               <h1 className="block md:hidden font-black text-3xl">{title}</h1>
               <img
                 src={image}
@@ -129,7 +129,7 @@ export default function GameDetails({ params }: any) {
               </div>
             </aside>
             {/*  */}
-            <div className="flex flex-col gap-6 lg:basis-[70%] 2xl:basis-[80%] basis-auto">
+            <div className="flex flex-col gap-6 lg:basis-[70%] 2xl:basis-[80%] basis-auto dark:bg-zinc-900 dark:rounded-md">
               <Swiper
                 slidesPerView={1}
                 spaceBetween={25}
@@ -149,24 +149,24 @@ export default function GameDetails({ params }: any) {
                   </SwiperSlide>
                 ))}
               </Swiper>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2  dark:p-4">
                 <h1 className="font-black lg:text-3xl md:text-2xl text-xl">
                   Description
                 </h1>
-                <div className="border-b mb-2" />
+                <div className="border-b mb-2 dark:border-zinc-700" />
                 <div
                   dangerouslySetInnerHTML={{
                     __html: description.replace(/\n/g, "<br>"),
                   }}
                 />
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2  dark:p-4">
                 <h1 className="font-black lg:text-3xl md:text-2xl text-xl">
                   Recommendations
                 </h1>
-                <div className="border-b" />
+                <div className="border-b dark:border-zinc-700" />
               </div>
-              <div className="grid 2xl:grid-cols-6 xl:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-2">
+              <div className="grid 2xl:grid-cols-6 xl:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-2 dark:p-4">
                 {recommendations.map((game: any) => (
                   <Link
                     href={`/game/${encodeURIComponent(game.href)}`}

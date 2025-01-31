@@ -20,6 +20,7 @@ export default function GamesSlidableWideCard({
         className="hidden xl:w-full shadow-lg xl:rounded-md"
         modules={[Pagination]}
         pagination={{ clickable: true }}
+        autoplay
       >
         {data.slice(0, 10).map((game, index) => (
           <SwiperSlide key={index} className="rounded-md">

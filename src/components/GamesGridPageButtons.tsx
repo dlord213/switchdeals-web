@@ -19,7 +19,7 @@ export default function GamesGridPageButtons({
         className={`py-2 px-6 flex items-center justify-center rounded-md shadow border transition-colors duration-200 ${
           isPrevDisabled
             ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-            : "bg-white hover:bg-gray-100 active:bg-gray-200"
+            : "bg-white hover:bg-gray-100 active:bg-gray-200 dark:bg-zinc-800 dark:border-zinc-800 dark:hover:bg-zinc-900"
         }`}
         onClick={isPrevDisabled ? undefined : prevBtnFunction}
         disabled={isPrevDisabled}
@@ -31,7 +31,7 @@ export default function GamesGridPageButtons({
         className={`py-2 px-6 flex items-center justify-center rounded-md shadow border transition-colors duration-200 ${
           isNextDisabled
             ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-            : "bg-white hover:bg-gray-100 active:bg-gray-200"
+            : "bg-white hover:bg-gray-100 active:bg-gray-200 dark:bg-zinc-800 dark:border-zinc-800 dark:hover:bg-zinc-900"
         }`}
         onClick={isNextDisabled ? undefined : nextBtnFunction}
         disabled={isNextDisabled}
