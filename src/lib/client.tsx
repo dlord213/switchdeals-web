@@ -4,3 +4,8 @@ import { wrapper } from "axios-cookiejar-support";
 
 export const client = wrapper(axios.create());
 export const cookieJar = new CookieJar();
+
+export const createScraperClient = () => {
+  const cookieJar = new CookieJar();
+  return wrapper(axios.create({ jar: cookieJar }));
+};

@@ -48,7 +48,6 @@ export default function Home() {
   } = useQuery({
     queryKey: ["gamesData", link],
     queryFn: async () => {
-      console.log(link);
       const response = await fetch(
         `api/games?region=${region}&page=${page}&type=${type}&sort=${sort}`
       );
@@ -61,9 +60,9 @@ export default function Home() {
   });
 
   const { data: featuredGamesData } = useQuery({
-    queryKey: ["featuredGames"],
+    queryKey: ["featuredGames", region],
     queryFn: async () => {
-      const response = await fetch("api/featured_games/");
+      const response = await fetch(`api/featured_games?region=${region}`);
       if (!response.ok) throw new Error("Failed to fetch featured games");
       return response.json();
     },

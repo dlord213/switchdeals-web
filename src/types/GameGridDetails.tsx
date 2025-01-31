@@ -5,4 +5,5 @@ export default interface GameGridDetails {
   price: string;
   originalPrice: string;
   link: string;
+  region: string;
 }

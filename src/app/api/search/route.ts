@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import axios from "axios";
 import * as cheerio from "cheerio";
+import { client } from "@/lib/client";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const url = `https://www.dekudeals.com/search?q=${query}`;
-    const { data } = await axios.get(url);
+    const { data } = await client.get(url);
 
     if (!data) return NextResponse.json({ games: [] }, { status: 500 });
 

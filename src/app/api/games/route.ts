@@ -1,7 +1,9 @@
-import { client, cookieJar } from "@/lib/client";
+import { createScraperClient } from "@/lib/client";
 import * as cheerio from "cheerio";
 
 import { NextRequest, NextResponse } from "next/server";
+
+const client = createScraperClient();
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -10,32 +12,39 @@ export async function GET(request: NextRequest) {
   const sort = searchParams.get("sort") || "";
   const region = searchParams.get("region") || "";
 
-  console.log(region);
-
   try {
     await client.post("https://www.dekudeals.com/locale", `country=${region}`, {
-      jar: cookieJar,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Origin: "https://www.dekudeals.com",
-        Referer:
-          "https://www.dekudeals.com/hottest?filter[store]=eshop&page=${page}&${type}&sort=${sort}",
+        Referer: "https://www.dekudeals.com/",
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
+        Accept:
+          "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "same-origin",
+      },
+      maxRedirects: 5,
+      validateStatus: (status) => status >= 200 && status < 400,
+    });
+
+    const url = new URL("https://www.dekudeals.com/hottest");
+    url.searchParams.set("filter[store]", "eshop");
+    url.searchParams.set("page", page);
+    url.searchParams.set("type", type);
+    url.searchParams.set("sort", sort);
+    if (region !== "us") {
+      url.searchParams.set("filter[store]", "eshop" + region);
+    }
+
+    const { data } = await client.get(url.toString(), {
+      headers: {
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
       },
-      maxRedirects: 5,
     });
-
-    const { data } = await client.get(
-      `https://www.dekudeals.com/hottest?filter[store]=eshop${region}&page=${page}&${type}&sort=${sort}`,
-      {
-        jar: cookieJar,
-        headers: {
-          "User-Agent":
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
-        },
-      }
-    );
 
     if (!data) {
       return NextResponse.json({ games: [] }, { status: 500 });
@@ -49,6 +58,7 @@ export async function GET(request: NextRequest) {
       price: string;
       originalPrice: string;
       link: string | undefined;
+      region: string | undefined;
     }[] = [];
 
     $(".browse-cards.desktop > .row > .col").each((index, element) => {
@@ -65,7 +75,11 @@ export async function GET(request: NextRequest) {
         .text()
         .trim();
       const discount = $element.find(".badge-danger").text().trim();
-      const link = $element.find(".main-link").attr("href");
+      const link = $element
+        .find(".main-link")
+        .attr("href")
+        ?.replace("?", "&")
+        .replace(/(eshop)(?=\w)/, "$1_");
 
       games.push({
         productTitle,
@@ -74,6 +88,7 @@ export async function GET(request: NextRequest) {
         price,
         originalPrice,
         link,
+        region: region,
       });
     });
 

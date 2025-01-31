@@ -2,7 +2,13 @@ import GameGridDetails from "@/types/GameGridDetails";
 import Link from "next/link";
 
 export default function GamesGridCard({ data }: { data: GameGridDetails }) {
-  if (!data?.productTitle || !data?.link || !data?.imgSrc || !data?.price) {
+  if (
+    !data?.productTitle ||
+    !data?.link ||
+    !data?.imgSrc ||
+    !data?.price ||
+    !data?.region
+  ) {
     return null;
   }
 
@@ -26,9 +32,13 @@ export default function GamesGridCard({ data }: { data: GameGridDetails }) {
         />
       </div>
       <div className="flex flex-col gap-2 p-4">
-        <h1 className="text-lg font-bold text-gray-800 dark:text-zinc-50">{data.productTitle}</h1>
+        <h1 className="text-lg font-bold text-gray-800 dark:text-zinc-50">
+          {data.productTitle}
+        </h1>
         <div className="flex flex-row items-center gap-2">
-          <p className="text-lg font-bold text-black dark:text-[#fafafa]">{data.price}</p>
+          <p className="text-lg font-bold text-black dark:text-[#fafafa]">
+            {data.price}
+          </p>
           {data.originalPrice && (
             <p className="text-sm text-gray-500 line-through">
               {data.originalPrice}

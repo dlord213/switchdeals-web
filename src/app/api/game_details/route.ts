@@ -1,25 +1,44 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios from "axios";
 import * as cheerio from "cheerio";
-import NodeCache from "node-cache";
 import { NextRequest, NextResponse } from "next/server";
+import { createScraperClient } from "@/lib/client";
 
-const cache = new NodeCache({ stdTTL: 600 });
+const client = createScraperClient();
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const url = searchParams.get("url");
+  const region = searchParams.get("region");
+  const store = searchParams.get("store");
 
   if (!url || !url.startsWith("/")) {
     return NextResponse.json({ error: "Invalid URL" }, { status: 400 });
   }
 
   const getGameData = async () => {
-    const cachedData = cache.get(url);
-    if (cachedData) return cachedData;
+    await client.post("https://www.dekudeals.com/locale", `country=${region}`, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Origin: "https://www.dekudeals.com",
+        Referer: "https://www.dekudeals.com/",
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
+        Accept:
+          "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "same-origin",
+      },
+      maxRedirects: 5,
+      validateStatus: (status) => status >= 200 && status < 400,
+    });
 
-    const { data } = await axios.get(`https://www.dekudeals.com${url}`);
+    const { data, config } = await client.get(
+      `https://www.dekudeals.com${url}?${store}`
+    );
     if (!data) throw new Error("Failed to fetch game data");
+
+    console.log(config);
 
     const $ = cheerio.load(data);
 
@@ -100,7 +119,10 @@ export async function GET(request: NextRequest) {
     $(".row.item-grid2 .cell").each((index, element) => {
       const title = $(element).find(".name").text().trim();
       const imageUrl = $(element).find("img").attr("src");
-      const href = $(element).find("a.main-link").attr("href");
+      const href = $(element)
+        .find("a.main-link")
+        .attr("href")
+        ?.replace("?", "&");
 
       let price = $(element).find(".price").text().trim();
       let originalPrice = null;

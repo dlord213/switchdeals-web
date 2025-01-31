@@ -19,9 +19,11 @@ import {
   FaCalendar,
   FaChalkboardUser,
 } from "react-icons/fa6";
+import useRegion from "@/stores/useRegion";
 
 export default function GameDetails({ params }: any) {
   const { value } = params;
+  const { region } = useRegion();
 
   const {
     data: gameDetailsData,
@@ -29,8 +31,8 @@ export default function GameDetails({ params }: any) {
     isError,
     error,
   } = useQuery({
-    queryKey: ["game", value],
-    queryFn: () => getGameDetails(value),
+    queryKey: ["game", value, region],
+    queryFn: () => getGameDetails(value, region),
     enabled: Boolean(value),
     refetchOnWindowFocus: false,
     staleTime: 15 * 60 * 1000,

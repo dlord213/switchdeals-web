@@ -74,7 +74,7 @@ export default function Header() {
             aria-label="Search for a game"
           />
         </form>
-        <div className="relative flex flex-row gap-4 items-center hidden">
+        <div className="relative flex flex-row gap-4 items-center">
           <select
             value={region}
             onChange={(e) => {
@@ -89,11 +89,7 @@ export default function Header() {
               </option>
             ))}
           </select>
-          <FaEarthAsia
-            size={24}
-            color="#fafafa"
-            aria-hidden="true"
-          />
+          <FaEarthAsia size={24} color="#fafafa" aria-hidden="true" />
         </div>
       </div>
     </nav>
