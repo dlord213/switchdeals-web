@@ -5,7 +5,7 @@ import countries from "@/types/Countries";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useCallback } from "react";
-import { FaAndroid, FaEarthAsia } from "react-icons/fa6";
+import { FaEarthAsia } from "react-icons/fa6";
 
 export default function Header() {
   const { region, setRegion } = useRegion();
@@ -32,7 +32,10 @@ export default function Header() {
       <div className="flex flex-row gap-2 items-center justify-between">
         <div className="flex flex-row items-center gap-2">
           <img src="/assets/logo/icon.png" className="w-full max-w-[48px]" />
-          <Link className="font-bold text-white hidden md:block md:text-2xl lg:text-xl" href="/">
+          <Link
+            className="font-bold text-white hidden md:block md:text-2xl lg:text-xl"
+            href="/"
+          >
             SwitchDeals
           </Link>
         </div>
