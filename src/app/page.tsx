@@ -8,7 +8,7 @@ import GamesSlidableWideCard from "@/components/GamesSlidableWideCard";
 
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { FaArrowLeft, FaBagShopping, FaDownload } from "react-icons/fa6";
+import { FaBagShopping, FaDownload } from "react-icons/fa6";
 import { FourSquare } from "react-loading-indicators";
 import Footer from "@/components/Footer";
 import useRegion from "@/stores/useRegion";
