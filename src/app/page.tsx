@@ -8,10 +8,11 @@ import GamesSlidableWideCard from "@/components/GamesSlidableWideCard";
 
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { FaBagShopping } from "react-icons/fa6";
+import { FaArrowLeft, FaBagShopping, FaDownload } from "react-icons/fa6";
 import { FourSquare } from "react-loading-indicators";
 import Footer from "@/components/Footer";
 import useRegion from "@/stores/useRegion";
+import Link from "next/link";
 
 export default function Home() {
   const [page, setPage] = useState(1);
@@ -102,6 +103,20 @@ export default function Home() {
         )}
         {gamesData && (
           <>
+            <div className="flex gap-4 md:hidden p-4 m-4 rounded-md bg-zinc-900 ">
+              <h1>
+                If you&apos;re an Android user, you can use our Android app
+                instead of browsing in the website!
+              </h1>
+              <Link
+                href="https://github.com/dlord213/switchdeals-android/releases/download/SwitchDeals/switchdeals.apk"
+                target="_blank"
+                className="py-2 px-6 flex items-center justify-center rounded-md shadow border transition-colors duration-200 bg-white hover:bg-gray-100 active:bg-gray-200 dark:bg-zinc-800 dark:border-zinc-800 dark:hover:bg-zinc-900"
+                aria-label="Previous Page"
+              >
+                <FaDownload size={16} />
+              </Link>
+            </div>
             <div className="flex flex-row gap-4 my-4 xl:my-0 items-end px-4 xl:p-0">
               <FaBagShopping size={36} className="dark:text-zinc-200" />
               <h1 className="text-2xl font-bold dark:text-zinc-200">

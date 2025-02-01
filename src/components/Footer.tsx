@@ -1,8 +1,11 @@
 export default function Footer() {
   return (
-    <footer className="flex flex-row bg-[#B03B48] lg:p-4 rounded-tl-md rounded-tr-md lg:justify-between h-full dark:bg-zinc-900 dark:border-0">
+    <footer className="flex flex-row bg-[#B03B48] p-4 rounded-tl-md rounded-tr-md lg:justify-between h-full dark:bg-zinc-900 dark:border-0">
       <div className="flex flex-row gap-2 items-center">
-        <img src="assets/logo/icon.png" className="w-full max-w-[72px]" />
+        <img
+          src="assets/logo/icon.png"
+          className="w-full lg:max-w-[72px] max-w-[48px]"
+        />
         <h1 className="font-bold lg:text-3xl text-white text-xl">
           SwitchDeals
         </h1>

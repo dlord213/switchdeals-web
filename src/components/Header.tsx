@@ -29,19 +29,31 @@ export default function Header() {
 
   return (
     <nav className="flex flex-col md:flex-row justify-between shadow p-4 xl:rounded-bl-md xl:rounded-br-md gap-2 md:gap-0 md:items-center bg-[#B03B48] dark:bg-zinc-900 dark:border-0">
-      <div className="flex flex-row gap-2 items-center">
-        <img src="/assets/logo/icon.png" className="w-full max-w-[48px]" />
-        <Link className="font-bold text-white md:text-2xl text-xl" href="/">
-          SwitchDeals
-        </Link>
+      <div className="flex flex-row gap-2 items-center justify-between">
+        <div className="flex flex-row items-center gap-2">
+          <img src="/assets/logo/icon.png" className="w-full max-w-[48px]" />
+          <Link className="font-bold text-white hidden md:block md:text-2xl lg:text-xl" href="/">
+            SwitchDeals
+          </Link>
+        </div>
+        <div className="flex relative lg:hidden flex-row gap-4 items-center">
+          <select
+            value={region}
+            onChange={(e) => {
+              handleRegionChange(e.target.value);
+              router.refresh();
+            }}
+            className="bg-gray-100 text-gray-900 border border-gray-300 px-3 py-1 rounded-md dark:bg-zinc-900 dark:text-[#fafafa] dark:border-zinc-800 outline-none"
+          >
+            {Object.entries(countries).map(([countryName, data]) => (
+              <option key={data.value} value={data.value}>
+                {countryName}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
       <div className="flex flex-row gap-4 md:items-center w-full md:w-fit">
-        <Link
-          href="/android"
-          className="px-6 py-0 flex flex-col justify-center items-center bg-slate-100 rounded-md dark:bg-zinc-800 transition-all delay-0 duration-200 dark:hover:bg-zinc-700"
-        >
-          <FaAndroid size={36} className="text-slate-900 dark:text-zinc-500" />
-        </Link>
         <form
           className="relative w-full"
           onSubmit={handleSearchSubmit}
@@ -74,7 +86,7 @@ export default function Header() {
             aria-label="Search for a game"
           />
         </form>
-        <div className="relative flex flex-row gap-4 items-center">
+        <div className="hidden relative lg:flex flex-row gap-4 items-center ">
           <select
             value={region}
             onChange={(e) => {
