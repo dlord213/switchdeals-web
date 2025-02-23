@@ -109,7 +109,7 @@ export default function Home() {
                 instead of browsing in the website!
               </h1>
               <Link
-                href="https://github.com/dlord213/switchdeals-android/releases/download/SwitchDeals/switchdeals.apk"
+                href="https://github.com/dlord213/switchdeals-android/releases/download/1.02/switchdeals.apk"
                 target="_blank"
                 className="py-2 px-6 flex items-center justify-center rounded-md shadow border transition-colors duration-200 bg-white hover:bg-gray-100 active:bg-gray-200 dark:bg-zinc-800 dark:border-zinc-800 dark:hover:bg-zinc-900"
                 aria-label="Previous Page"
