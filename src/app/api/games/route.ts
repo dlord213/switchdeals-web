@@ -33,7 +33,9 @@ export async function GET(request: NextRequest) {
     const url = new URL("https://www.dekudeals.com/hottest");
     url.searchParams.set("filter[store]", "eshop");
     url.searchParams.set("page", page);
-    url.searchParams.set("type", type);
+    if (type) {
+      url.searchParams.set("filter[type]", type);
+    }
     url.searchParams.set("sort", sort);
     if (region !== "us") {
       url.searchParams.set("filter[store]", "eshop" + region);
