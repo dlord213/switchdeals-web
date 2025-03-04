@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
     url.searchParams.set("filter[store]", "eshop");
     url.searchParams.set("page", page);
     if (type) {
-      url.searchParams.set("filter[type]", type);
+      url.searchParams.set("filter[type]", "bundle");
     }
     url.searchParams.set("sort", sort);
     if (region !== "us") {
