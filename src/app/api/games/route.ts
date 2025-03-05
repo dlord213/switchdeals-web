@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
   const type = searchParams.get("type") || "";
   const sort = searchParams.get("sort") || "";
   const region = searchParams.get("region") || "";
+  const genre = searchParams.get("genre") || "";
 
   try {
     await client.post("https://www.dekudeals.com/locale", `country=${region}`, {
@@ -35,6 +36,9 @@ export async function GET(request: NextRequest) {
     url.searchParams.set("page", page);
     if (type) {
       url.searchParams.set("filter[type]", "bundle");
+    }
+    if (genre) {
+      url.searchParams.set("filter[genre]", genre);
     }
     url.searchParams.set("sort", sort);
     if (region !== "us") {

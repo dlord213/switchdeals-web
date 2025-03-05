@@ -5,12 +5,16 @@
 :root {
   --background: #fefefe;
   --foreground: #363636;
+  --swiper-navigation-color: #fefefe;
+  --swiper-pagination-color: #fefefe;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #09090B;
+    --background: #09090b;
     --foreground: #fbfbfb;
+    --swiper-navigation-color: #fefefe;
+    --swiper-pagination-color: #fefefe;
   }
 }
 
@@ -21,8 +25,5 @@ body {
 }
 
 .carousel-text-shadow {
-  text-shadow: 1px 2px 6px rgba(47, 47, 47, 0.76);
-}
-.carousel-button-next {
-  color: #fefefe;
+  text-shadow: 1px 2px 6px rgba(47, 47, 47, 1);
 }

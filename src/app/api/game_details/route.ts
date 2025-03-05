@@ -33,12 +33,10 @@ export async function GET(request: NextRequest) {
       validateStatus: (status) => status >= 200 && status < 400,
     });
 
-    const { data, config } = await client.get(
+    const { data } = await client.get(
       `https://www.dekudeals.com${url}?${store}`
     );
     if (!data) throw new Error("Failed to fetch game data");
-
-    console.log(config);
 
     const $ = cheerio.load(data);
 

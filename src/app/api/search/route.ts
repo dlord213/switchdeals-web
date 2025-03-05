@@ -32,9 +32,8 @@ export async function GET(request: NextRequest) {
 
   try {
     const url = new URL("https://www.dekudeals.com/search");
-    url.searchParams.set("q", query);
-    if (region !== "us") {
-    }
+    url.searchParams.set("q", decodeURIComponent(query));
+    url.searchParams.set("filter[type]", "game");
     const { data } = await client.get(url.toString(), {
       headers: {
         "User-Agent":

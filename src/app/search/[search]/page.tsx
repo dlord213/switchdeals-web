@@ -6,6 +6,7 @@ import useRegion from "@/stores/useRegion";
 
 import { useQuery } from "@tanstack/react-query";
 import { use } from "react";
+import { FourSquare } from "react-loading-indicators";
 
 export default function Page({
   params,
@@ -54,7 +55,11 @@ export default function Page({
             ))}
           </div>
         </>
-      ) : null}
+      ) : (
+        <div className="flex flex-col justify-center items-center my-8">
+          <FourSquare size="large" color="#B03B48" />
+        </div>
+      )}
     </main>
   );
 }

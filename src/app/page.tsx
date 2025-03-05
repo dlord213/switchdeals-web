@@ -6,18 +6,21 @@ import GamesGridCard from "@/components/GamesGridCard";
 import GamesGridPageButtons from "@/components/GamesGridPageButtons";
 import GamesSlidableWideCard from "@/components/GamesSlidableWideCard";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { FaBagShopping, FaDownload } from "react-icons/fa6";
+import { FaBagShopping, FaDownload, FaFilter } from "react-icons/fa6";
 import { FourSquare } from "react-loading-indicators";
 import Footer from "@/components/Footer";
 import useRegion from "@/stores/useRegion";
 import Link from "next/link";
+import Filtering from "@/components/Filtering";
 
 export default function Home() {
   const [page, setPage] = useState(1);
   const [type, setType] = useState("");
   const [sort, setSort] = useState("");
+  const [genre, setGenre] = useState("");
+  const [isFiltersVisible, setFilterVisibility] = useState(true);
   const { region } = useRegion();
 
   const link = useMemo(() => {
@@ -39,8 +42,12 @@ export default function Home() {
       baseUrl += `&sort=${sort}`;
     }
 
+    if (genre) {
+      baseUrl += `&genre=${genre}`;
+    }
+
     return baseUrl;
-  }, [page, type, sort, region]);
+  }, [page, type, sort, region, genre]);
 
   const {
     data: gamesData,
@@ -50,7 +57,7 @@ export default function Home() {
     queryKey: ["gamesData", link],
     queryFn: async () => {
       const response = await fetch(
-        `api/games?region=${region}&page=${page}&type=${type}&sort=${sort}`
+        `api/games?region=${region}&page=${page}&type=${type}&sort=${sort}&genre=${genre}`
       );
       if (!response.ok) throw new Error("Failed to fetch games data");
       return response.json();
@@ -80,15 +87,20 @@ export default function Home() {
     setPage((prev) => prev + 1);
   };
 
+  useEffect(() => {
+    if (window.innerWidth < 500) {
+      setFilterVisibility(false);
+    }
+  }, []);
+
   return (
     <main className="flex flex-col xl:gap-4 xl:max-w-[70vw] mx-auto min-h-screen ">
       <Header />
-      <section>
-        <div className="hidden xl:block">
-          {featuredGamesData && (
-            <GamesSlidableWideCard data={featuredGamesData.games} />
-          )}
-        </div>
+      <section className="lg:flex flex-col hidden gap-4">
+        <h1 className="text-4xl font-black">Featured</h1>
+        {featuredGamesData && (
+          <GamesSlidableWideCard data={featuredGamesData.games} />
+        )}
       </section>
       <section>
         {isGamesLoading && (
@@ -117,52 +129,50 @@ export default function Home() {
                 <FaDownload size={16} />
               </Link>
             </div>
-            <div className="flex flex-row gap-4 my-4 xl:my-0 items-end px-4 xl:p-0">
-              <FaBagShopping size={36} className="dark:text-zinc-200" />
-              <h1 className="text-2xl font-bold dark:text-zinc-200">
-                Sales/Discounts
-              </h1>
-            </div>
-            <div className="flex flex-row gap-2 my-4 px-4 xl:p-0">
+            <div className="flex lg:hidden flex-row gap-4 my-4 xl:my-0 items-center justify-between px-4 xl:p-0">
+              <div className="flex items-center gap-4">
+                <FaBagShopping size={36} className="dark:text-zinc-200" />
+                <h1 className="text-2xl font-bold dark:text-zinc-200">
+                  Sales/Discounts
+                </h1>
+              </div>
               <button
                 className={
-                  type === ""
-                    ? "px-4 py-2 border rounded-md shadow bg-[#B03B48] text-white cursor-pointer dark:bg-zinc-900 dark:border-zinc-700"
-                    : "px-4 py-2 border rounded-md shadow cursor-pointer dark:border-0 dark:bg-zinc-900"
+                  isFiltersVisible
+                    ? "px-4 py-2 border rounded-md shadow bg-[#B03B48] text-white cursor-pointer dark:bg-zinc-800 dark:border-zinc-700"
+                    : "px-4 py-2 border rounded-md shadow cursor-pointer dark:border-0 dark:bg-zinc-800"
                 }
-                onClick={() => setType("")}
               >
-                Game
+                <FaFilter
+                  onClick={() => setFilterVisibility((prev) => !prev)}
+                  size={16}
+                />
               </button>
-              <button
-                className={
-                  type === "filter[type]=bundle"
-                    ? "px-4 py-2 border rounded-md shadow bg-[#B03B48] text-white cursor-pointer dark:bg-zinc-900 dark:border-zinc-700"
-                    : "px-4 py-2 border rounded-md shadow cursor-pointer dark:border-0 dark:bg-zinc-900"
-                }
-                onClick={() => setType("filter[type]=bundle")}
-              >
-                Bundle
-              </button>
-              <select
-                className="bg-gray-100 text-gray-900 border border-gray-300 px-3 py-1 rounded-md dark:bg-zinc-900 dark:text-[#fafafa] dark:border-zinc-800 outline-none"
-                value={sort}
-                onChange={(e) => setSort(e.target.value)}
-              >
-                <option value="hottest">Hottest deals</option>
-                <option value="most_wanted">Most wanted</option>
-                <option value="most_owned">Most owned</option>
-              </select>
             </div>
-            <div className="grid xl:grid-cols-4 lg:grid-cols-3 grid-cols-2 gap-4 px-4 xl:p-0">
-              {gamesData.games.map((game: any) => (
-                <GamesGridCard data={game} key={game.link} />
-              ))}
+            <div className="flex lg:flex-row flex-col gap-6">
+              <Filtering
+                genre={genre}
+                sort={sort}
+                type={type}
+                isVisible={isFiltersVisible}
+                setGenre={setGenre}
+                setSort={setSort}
+                setType={setType}
+              />
+              <div className="flex flex-col gap-4">
+                <div className="grid xl:grid-cols-4 lg:grid-cols-3 grid-cols-2 gap-4 px-4 xl:p-0">
+                  {gamesData.games.map((game: any) => (
+                    <GamesGridCard data={game} key={game.link} />
+                  ))}
+                </div>
+                {gamesData.games.length > 28 && (
+                  <GamesGridPageButtons
+                    prevBtnFunction={previousPage}
+                    nextBtnFunction={nextPage}
+                  />
+                )}
+              </div>
             </div>
-            <GamesGridPageButtons
-              prevBtnFunction={previousPage}
-              nextBtnFunction={nextPage}
-            />
           </>
         )}
       </section>

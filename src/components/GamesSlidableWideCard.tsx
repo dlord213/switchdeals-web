@@ -4,7 +4,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { Pagination } from "swiper/modules";
+import 'swiper/css/effect-fade';
+import { EffectFade, Navigation, Pagination } from "swiper/modules";
 import GameGridDetails from "@/types/GameGridDetails";
 
 export default function GamesSlidableWideCard({
@@ -18,8 +19,10 @@ export default function GamesSlidableWideCard({
         slidesPerView={1}
         spaceBetween={25}
         className="hidden xl:w-full shadow-lg xl:rounded-md"
-        modules={[Pagination]}
+        modules={[Pagination, EffectFade, Navigation]}
         pagination={{ clickable: true }}
+        navigation
+        effect="fade"
         autoplay
       >
         {data.slice(0, 10).map((game, index) => (
