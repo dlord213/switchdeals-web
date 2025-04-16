@@ -50,7 +50,6 @@ export async function GET(request: NextRequest) {
       href: string | undefined;
     }[] = [];
     const gameDetails: any = {};
-    const reviews: any = [];
 
     /* LEFT SIDE ====================================================================== */
     gameDetails.image = $(".responsive-img").attr("src");
