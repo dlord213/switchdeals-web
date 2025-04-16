@@ -50,6 +50,7 @@ export async function GET(request: NextRequest) {
       href: string | undefined;
     }[] = [];
     const gameDetails: any = {};
+    const reviews: any = [];
 
     /* LEFT SIDE ====================================================================== */
     gameDetails.image = $(".responsive-img").attr("src");
@@ -72,8 +73,8 @@ export async function GET(request: NextRequest) {
           .find("a")
           .map((i, el) => {
             return {
-              genreName: $(el).text().trim(),
-              genreLink: $(el).attr("href"),
+              name: $(el).text().trim(),
+              link: $(el).attr("href"),
             };
           })
           .get();

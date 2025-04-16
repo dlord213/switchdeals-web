@@ -8,7 +8,7 @@ import GamesSlidableWideCard from "@/components/GamesSlidableWideCard";
 
 import { useState, useMemo, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { FaBagShopping, FaDownload, FaFilter } from "react-icons/fa6";
+import { FaBagShopping, FaDownload, FaFilter, FaHeart } from "react-icons/fa6";
 import { FourSquare } from "react-loading-indicators";
 import Footer from "@/components/Footer";
 import useRegion from "@/stores/useRegion";
@@ -102,7 +102,7 @@ export default function Home() {
           <GamesSlidableWideCard data={featuredGamesData.games} />
         )}
       </section>
-      <section>
+      <section className="relative">
         {isGamesLoading && (
           <div className="flex flex-col justify-center items-center my-8">
             <FourSquare size="large" color="#B03B48" />
@@ -149,7 +149,7 @@ export default function Home() {
                 />
               </button>
             </div>
-            <div className="flex lg:flex-row flex-col gap-6">
+            <div className="flex relative lg:flex-row flex-col gap-6">
               <Filtering
                 genre={genre}
                 sort={sort}

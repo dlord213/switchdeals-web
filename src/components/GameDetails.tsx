@@ -74,8 +74,8 @@ export default function GameDetails({ params }: any) {
     <main className="flex flex-col md:gap-4 xl:max-w-[70vw] mx-auto">
       {gameDetailsData ? (
         <>
-          <section className="min-h-screen flex flex-col lg:flex-row gap-4 mb-4 xl:p-0 p-4">
-            <aside className="flex flex-col gap-2 lg:basis-[30%] 2xl:basis-[30%] h-fit lg:border lg:shadow-md lg:rounded-md lg:p-4 dark:border-0 dark:bg-zinc-900 dark:p-4 dark:rounded-md">
+          <section className="relative min-h-screen flex flex-col lg:flex-row gap-4 mb-4 xl:p-0 p-4">
+            <aside className="flex flex-col sticky top-4 gap-2 lg:basis-[30%] 2xl:basis-[30%] h-fit lg:border lg:shadow-md lg:rounded-md lg:p-4 dark:border-0 dark:bg-zinc-900 dark:p-4 dark:rounded-md">
               <h1 className="block md:hidden font-black text-3xl">{title}</h1>
               <img
                 src={image}
@@ -116,7 +116,7 @@ export default function GameDetails({ params }: any) {
                 </p>
                 <p className="flex flex-row gap-3 items-center">
                   <FaAddressBook />
-                  {gameDetails["Publisher"]?.[0]?.genreName ??
+                  {gameDetails["Publisher"]?.[0]?.name ??
                     "Publisher information not available"}
                 </p>
                 {gameDetails["Release date"] && (
@@ -131,61 +131,63 @@ export default function GameDetails({ params }: any) {
               </div>
             </aside>
             {/*  */}
-            <div className="flex flex-col gap-6 lg:basis-[70%] 2xl:basis-[80%] basis-auto dark:bg-zinc-900 dark:rounded-md">
-              <Swiper
-                slidesPerView={1}
-                spaceBetween={25}
-                className="lg:max-w-[50vw] max-w-[92vw] shadow-lg rounded-md"
-                modules={[Navigation, Pagination]}
-                pagination={{ clickable: true }}
-                navigation={{ enabled: true }}
-              >
-                {images.map((image: string, index: number) => (
-                  <SwiperSlide key={image} className="rounded-md">
-                    <img
-                      src={image}
-                      className="w-full object-cover"
-                      alt={`Screenshot ${index + 1}`}
-                      key={image}
-                    />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-              <div className="flex flex-col gap-2  dark:p-4">
-                <h1 className="font-black lg:text-3xl md:text-2xl text-xl">
-                  Description
-                </h1>
-                <div className="border-b mb-2 dark:border-zinc-700" />
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: description.replace(/\n/g, "<br>"),
-                  }}
-                />
-              </div>
-              <div className="flex flex-col gap-2  dark:p-4">
-                <h1 className="font-black lg:text-3xl md:text-2xl text-xl">
-                  Recommendations
-                </h1>
-                <div className="border-b dark:border-zinc-700" />
-              </div>
-              <div className="grid 2xl:grid-cols-6 xl:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-2 dark:p-4">
-                {recommendations.map((game: any) => (
-                  <Link
-                    href={`/game/${encodeURIComponent(game.href)}`}
-                    className="flex flex-col gap-2"
-                    key={game.href}
-                  >
-                    <img
-                      src={game.imageUrl}
-                      alt={game.title}
-                      className="w-full rounded-md shadow-md"
-                    />
-                    <div>
-                      <h1 className="font-bold">{game.title}</h1>
-                      <p className="">{game.discountedPrice}</p>
-                    </div>
-                  </Link>
-                ))}
+            <div className="flex flex-col gap-6 lg:basis-[70%] 2xl:basis-[80%] basis-auto">
+              <div className="flex flex-col gap-6 dark:bg-zinc-900 dark:rounded-md">
+                <Swiper
+                  slidesPerView={1}
+                  spaceBetween={25}
+                  className="lg:max-w-[50vw] max-w-[92vw] shadow-lg rounded-md"
+                  modules={[Navigation, Pagination]}
+                  pagination={{ clickable: true }}
+                  navigation={{ enabled: true }}
+                >
+                  {images.map((image: string, index: number) => (
+                    <SwiperSlide key={image} className="rounded-md">
+                      <img
+                        src={image}
+                        className="w-full object-cover"
+                        alt={`Screenshot ${index + 1}`}
+                        key={image}
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+                <div className="flex flex-col gap-2  dark:p-4">
+                  <h1 className="font-black lg:text-3xl md:text-2xl text-xl">
+                    Description
+                  </h1>
+                  <div className="border-b mb-2 dark:border-zinc-700" />
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: description.replace(/\n/g, "<br>"),
+                    }}
+                  />
+                </div>
+                <div className="flex flex-col gap-2  dark:p-4">
+                  <h1 className="font-black lg:text-3xl md:text-2xl text-xl">
+                    Recommendations
+                  </h1>
+                  <div className="border-b dark:border-zinc-700" />
+                </div>
+                <div className="grid 2xl:grid-cols-6 xl:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-2 dark:p-4">
+                  {recommendations.map((game: any) => (
+                    <Link
+                      href={`/game/${encodeURIComponent(game.href)}`}
+                      className="flex flex-col gap-2"
+                      key={game.href}
+                    >
+                      <img
+                        src={game.imageUrl}
+                        alt={game.title}
+                        className="w-full rounded-md shadow-md"
+                      />
+                      <div>
+                        <h1 className="font-bold">{game.title}</h1>
+                        <p className="">{game.discountedPrice}</p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
               </div>
             </div>
           </section>
