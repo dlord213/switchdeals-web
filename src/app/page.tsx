@@ -6,7 +6,7 @@ import GamesGridCard from "@/components/GamesGridCard";
 import GamesGridPageButtons from "@/components/GamesGridPageButtons";
 import GamesSlidableWideCard from "@/components/GamesSlidableWideCard";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FaBagShopping, FaDownload, FaFilter } from "react-icons/fa6";
 import { FourSquare } from "react-loading-indicators";
@@ -14,6 +14,7 @@ import Footer from "@/components/Footer";
 import useRegion from "@/stores/useRegion";
 import Link from "next/link";
 import Filtering from "@/components/Filtering";
+import { MdClose, MdError } from "react-icons/md";
 
 export default function Home() {
   const [page, setPage] = useState(1);
@@ -22,6 +23,7 @@ export default function Home() {
   const [genre, setGenre] = useState("");
   const [isFiltersVisible, setFilterVisibility] = useState(true);
   const { region } = useRegion();
+  const alertRef = useRef<any>(null);
 
   const link = useMemo(() => {
     let baseUrl = `https://www.dekudeals.com/hottest?filter[store]=eshop`;
@@ -177,6 +179,28 @@ export default function Home() {
         )}
       </section>
       {gamesData && <Footer />}
+      <div
+        ref={alertRef}
+        className="fixed bottom-12 right-8 p-4 bg-white hover:bg-gray-100 active:bg-gray-200 dark:bg-zinc-800 dark:border-zinc-800 dark:hover:bg-zinc-900 flex gap-4 items-center rounded-3xl max-w-sm z-50"
+      >
+        <MdError size={36} className="shrink-0" />
+        <div className="flex flex-col">
+          <div className="flex flex-row justify-between items-center">
+            <p>April 20, 2025</p>
+            <MdClose
+              size={24}
+              className="shrink-0 cursor-pointer"
+              onClick={() => {
+                alertRef.current.style.display = "none";
+              }}
+            />
+          </div>
+          <h1 className="font-bold">
+            The deals not appearing has been addressed, the cause is in our
+            APIs.
+          </h1>
+        </div>
+      </div>
     </main>
   );
 }

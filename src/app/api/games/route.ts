@@ -98,8 +98,6 @@ export async function GET(request: NextRequest) {
       });
     });
 
-    console.log(games);
-
     return NextResponse.json({ games }, { status: 200 });
   } catch (error: unknown) {
     const errorMessage =
