@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
       link: string | undefined;
     }[] = [];
 
-    $(".browse-cards.desktop > .row > .col").each((index, element) => {
+    $(".browse-cards > .row > .col").each((index, element) => {
       const $element = $(element);
 
       const productTitle = $element.find(".main-link h6").text().trim();

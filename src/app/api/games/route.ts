@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
       region: string | undefined;
     }[] = [];
 
-    $(".browse-cards.desktop > .row > .col").each((index, element) => {
+    $(".browse-cards > .row > .col").each((index, element) => {
       const $element = $(element);
 
       const productTitle = $element.find(".main-link h6").text().trim();
@@ -97,6 +97,8 @@ export async function GET(request: NextRequest) {
         region: region,
       });
     });
+
+    console.log(games);
 
     return NextResponse.json({ games }, { status: 200 });
   } catch (error: unknown) {
