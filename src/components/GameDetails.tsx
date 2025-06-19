@@ -75,7 +75,7 @@ export default function GameDetails({ params }: any) {
       {gameDetailsData ? (
         <>
           <section className="relative min-h-screen flex flex-col lg:flex-row gap-4 mb-4 xl:p-0 p-4">
-            <aside className="flex flex-col sticky top-4 gap-2 lg:basis-[30%] 2xl:basis-[30%] h-fit lg:border lg:shadow-md lg:rounded-md lg:p-4 dark:border-0 dark:bg-zinc-900 dark:p-4 dark:rounded-md">
+            <aside className="flex flex-col lg:sticky top-4 gap-2 lg:basis-[30%] 2xl:basis-[30%] h-fit lg:border lg:shadow-md lg:rounded-md lg:p-4 dark:border-0 dark:bg-zinc-900 dark:p-4 dark:rounded-md">
               <h1 className="block md:hidden font-black text-3xl">{title}</h1>
               <img
                 src={image}

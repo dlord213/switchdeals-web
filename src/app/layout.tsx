@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Work_Sans } from "next/font/google";
+import { Work_Sans, Gabarito } from "next/font/google";
 import "./globals.css";
 import { ReactQueryProvider } from "@/lib/query_provider";
 
-const workSans = Work_Sans({
-  variable: "--font-work-sans",
+const workSans = Gabarito({
+  variable: "--font-gabarito",
   subsets: ["latin"],
 });
 

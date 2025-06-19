@@ -181,7 +181,7 @@ export default function Home() {
       {gamesData && <Footer />}
       <div
         ref={alertRef}
-        className="fixed bottom-12 right-8 p-4 bg-white hover:bg-gray-100 active:bg-gray-200 dark:bg-zinc-800 dark:border-zinc-800 dark:hover:bg-zinc-900 flex gap-4 items-center rounded-3xl max-w-sm z-50"
+        className="hidden fixed bottom-12 right-8 p-4 bg-white hover:bg-gray-100 active:bg-gray-200 dark:bg-zinc-800 dark:border-zinc-800 dark:hover:bg-zinc-900 flex gap-4 items-center rounded-3xl max-w-sm z-50"
       >
         <MdError size={36} className="shrink-0" />
         <div className="flex flex-col">
