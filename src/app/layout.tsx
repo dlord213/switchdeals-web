@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Work_Sans, Gabarito } from "next/font/google";
-import "./globals.css";
+import { Gabarito } from "next/font/google";
 import { ReactQueryProvider } from "@/lib/query_provider";
+
+import "./globals.css";
 
 const workSans = Gabarito({
   variable: "--font-gabarito",
